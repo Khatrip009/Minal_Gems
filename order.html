@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Checkout — Payal & Minal Gems</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --primary-pink:#FF1493;
+      --luxury-gold:#FFD700;
+      --deep-black:#111827;
+      --charcoal:#4b5563;
+      --nav-bg: rgba(255,255,255,0.92);
+      --brand-gradient: linear-gradient(90deg,var(--primary-pink),var(--luxury-gold));
+      --font-heading:'Playfair Display', serif;
+      --font-body:'Poppins', sans-serif;
+    }
+    html,body{height:100%;}
+    body{
+      font-family:var(--font-body);
+      color:var(--charcoal);
+      background:#fff;
+      margin:0;
+      -webkit-font-smoothing:antialiased;
+      padding-top:72px;
+    }
+    h1,h2,h3{ font-family:var(--font-heading); color:var(--deep-black); }
+    .muted-small{ color:#9ca3af; font-size:.95rem; }
+
+    /* NAV */
+    .navbar{
+      background: var(--nav-bg);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      padding: .6rem 0;
+    }
+    .navbar-brand img{ height:56px; object-fit:contain; }
+    .btn-primary { background:var(--primary-pink); border:none; }
+    .btn-primary:hover { background-image: var(--brand-gradient); color:#111; }
+
+    .container-max { max-width:1100px; margin: 18px auto; padding: 18px; }
+    .panel { background:#fff; border-radius:10px; padding:18px; border:1px solid rgba(0,0,0,0.04); box-shadow:0 8px 30px rgba(16,24,40,0.04); }
+
+    .summary-row { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .item-line { display:flex; gap:12px; align-items:center; }
+    .item-thumb { width:64px; height:64px; object-fit:cover; border-radius:8px; background:#f3f3f3; }
+
+    @media(max-width:768px){ .item-line { flex-direction:row; } }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="assets/images/logo_minalgems.png" alt="Payal & Minal Gems Logo" />
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" aria-controls="navMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="products.html">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="diamonds.html">Diamonds</a></li>
+          <li class="nav-item"><a class="nav-link" href="gold.html">Gold</a></li>
+
+          <li class="nav-item ms-3 d-none d-lg-block">
+            <a class="btn btn-outline-dark btn-sm" href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+          </li>
+          <li class="nav-item ms-2 d-none d-lg-block">
+            <a class="btn btn-sm btn-primary" href="login.html">Login</a>
+          </li>
+
+          <li class="nav-item ms-2 d-flex align-items-center">
+            <button class="btn btn-outline-dark btn-sm me-2" onclick="goHome()">Home</button>
+            <button class="btn btn-outline-dark btn-sm" onclick="goBack()">Back</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE CONTENT -->
+  <main class="container-max">
+    <div class="row g-4">
+      <!-- Billing / Shipping form -->
+      <div class="col-lg-7">
+        <div class="panel">
+          <h4 class="mb-3">Shipping & Billing</h4>
+          <form id="orderForm" class="needs-validation" novalidate>
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label">Full name</label>
+                <input id="fullName" class="form-control" required>
+                <div class="invalid-feedback">Please enter recipient name.</div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Phone</label>
+                <input id="phone" class="form-control" type="tel" required>
+                <div class="invalid-feedback">Please enter phone number.</div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Email</label>
+                <input id="email" class="form-control" type="email" required>
+                <div class="invalid-feedback">Please enter a valid email.</div>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label">Shipping address</label>
+                <textarea id="address" class="form-control" rows="2" required></textarea>
+                <div class="invalid-feedback">Please provide an address.</div>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label">City</label>
+                <input id="city" class="form-control" required>
+                <div class="invalid-feedback">City required.</div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">State</label>
+                <input id="state" class="form-control" required>
+                <div class="invalid-feedback">State required.</div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">PIN / Zip</label>
+                <input id="zip" class="form-control" required>
+                <div class="invalid-feedback">Postal code required.</div>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label">Special instructions (optional)</label>
+                <input id="notes" class="form-control" placeholder="e.g. leave at reception">
+              </div>
+
+              <!-- Payment -->
+              <div class="col-12">
+                <h5 class="mt-3">Payment method</h5>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="payment" id="payCOD" value="cod" checked>
+                  <label class="form-check-label" for="payCOD">Cash on Delivery</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="payment" id="payCard" value="card">
+                  <label class="form-check-label" for="payCard">Card (mock)</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="payment" id="payUPI" value="upi">
+                  <label class="form-check-label" for="payUPI">UPI / Wallet (mock)</label>
+                </div>
+              </div>
+
+              <!-- Card fields (shown only for mock card) -->
+              <div id="cardFields" class="col-12 d-none">
+                <div class="row g-2">
+                  <div class="col-md-6">
+                    <label class="form-label">Card number</label>
+                    <input id="cardNumber" class="form-control" maxlength="19" placeholder="4242 4242 4242 4242">
+                    <div class="invalid-feedback">Enter card number (demo).</div>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Expiry (MM/YY)</label>
+                    <input id="cardExp" class="form-control" maxlength="5" placeholder="08/26">
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">CVV</label>
+                    <input id="cardCvv" class="form-control" maxlength="4" placeholder="123">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="form-check">
+                  <input id="agree" class="form-check-input" type="checkbox" required>
+                  <label class="form-check-label" for="agree">I agree to the <a href="terms.html">terms & conditions</a>.</label>
+                  <div class="invalid-feedback">You must agree before placing an order.</div>
+                </div>
+              </div>
+
+              <div class="col-12 text-end">
+                <button id="placeOrderBtn" type="submit" class="btn btn-primary btn-lg">Place order</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Confirmation (hidden until order placed) -->
+        <div id="orderConfirmation" class="panel mt-4 d-none">
+          <h4>Order confirmed</h4>
+          <p id="confirmMsg">Thank you — your order has been placed.</p>
+          <p><strong>Order ID:</strong> <span id="confirmOrderId"></span></p>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-dark" onclick="window.location.href='products.html'">Continue shopping</button>
+            <button class="btn btn-primary" id="printInvoiceBtn">Print / Download invoice</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order summary -->
+      <div class="col-lg-5">
+        <div class="panel">
+          <h5>Order summary</h5>
+          <div id="cartSummary" class="mt-3">
+            <!-- items injected by JS -->
+          </div>
+
+          <hr>
+          <div class="summary-row my-2">
+            <div>Subtotal</div>
+            <div id="subtotalText">₹0</div>
+          </div>
+          <div class="summary-row my-2">
+            <div>Shipping</div>
+            <div id="shippingText">₹0</div>
+          </div>
+          <div class="summary-row my-2">
+            <div>GST (5%)</div>
+            <div id="taxText">₹0</div>
+          </div>
+
+          <div class="summary-row my-3">
+            <div class="h5 mb-0">Total</div>
+            <div class="h5 mb-0" id="totalText">₹0</div>
+          </div>
+
+          <div class="mt-3">
+            <label class="form-label">Promo code</label>
+            <div class="d-flex gap-2">
+              <input id="promo" class="form-control" placeholder="Enter code">
+              <button id="applyPromo" class="btn btn-outline-dark">Apply</button>
+            </div>
+            <div id="promoMsg" class="muted-small mt-2"></div>
+          </div>
+
+          <div class="mt-3 text-muted small">
+            Orders typically ship within 2–5 business days for stock items. Custom pieces have separate timelines agreed during checkout.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-4">
+    <div class="container">
+      <div class="row gy-3 py-3">
+        <div class="col-md-4">
+          <img src="assets/images/logo_minalgems.png" alt="logo" style="height:56px;">
+          <p class="mt-2 small muted-small">Jewellery for all occasions. Certified diamonds, premium gold, reliable service.</p>
+        </div>
+        <div class="col-md-4">
+          <h6 class="mb-2">Quick Links</h6>
+          <ul class="list-unstyled small">
+            <li><a href="products.html">Shop</a></li>
+            <li><a href="process.html">Process</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h6 class="mb-2">Contact</h6>
+          <p class="small mb-0">33, Sant Tukaram Society-2, Surat</p>
+          <p class="small mb-0">+91 70697 85900</p>
+          <p class="small"><a href="mailto:khatrip.009@gmail.com">khatrip.009@gmail.com</a></p>
+        </div>
+      </div>
+      <hr />
+      <div class="text-center small">&copy; 2025 Payal & Minal Gems. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Shared navigation + cart helpers
+    function goHome(){ window.location.href='index.html'; }
+    function goBack(){
+      if (document.referrer && document.referrer !== window.location.href) { history.back(); return; }
+      if (history.length > 1) { history.back(); return; }
+      window.location.href = 'index.html';
+    }
+
+    const CART_KEY = 'minalgems_cart_v1';
+    const ORDERS_KEY = 'minalgems_orders_v1';
+
+    function getCart(){ try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch(e){ return []; } }
+    function saveCart(arr){ try { localStorage.setItem(CART_KEY, JSON.stringify(arr)); } catch(e){} }
+    function getOrders(){ try { return JSON.parse(localStorage.getItem(ORDERS_KEY)) || []; } catch(e){ return []; } }
+    function saveOrders(arr){ try { localStorage.setItem(ORDERS_KEY, JSON.stringify(arr)); } catch(e){} }
+
+    function updateCartCount(){ const el=document.getElementById('cart-count'); if(el) el.innerText = getCart().length; }
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+
+    // Product name & thumbnail map (for demo; replace with your product data / API)
+    const PRODUCT_MAP = {
+      'ring1': { title: 'Classic Round Diamond Ring', thumb: 'https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=600&auto=format&fit=crop&ixlib=rb-4.0.3&s=2b7a9daa1d8f0c3d7e1ef8a6cdb8b6f8' },
+      'neck1': { title: 'Timeless Gold Necklace', thumb: 'https://images.unsplash.com/photo-1543168256-418811576c3b?q=80&w=600&auto=format&fit=crop&ixlib=rb-4.0.3&s=9b1b6b5ef5c6b2f11a5f2394e6b4b6c8' },
+      'ear1': { title: 'Elegant Stud Earrings', thumb: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600&auto=format&fit=crop&ixlib=rb-4.0.3&s=722b3b9a2a2f6a9d8a4c9e8b5b7d5f4e' },
+      'brace1': { title: 'Contemporary Bracelet', thumb: 'https://images.unsplash.com/photo-1513708929627-3d8c3d7d4f6a?q=80&w=600&auto=format&fit=crop&ixlib=rb-4.0.3&s=3a7a7d8a1f1e6a3a6b0f0b0c0b8c9a6e' }
+    };
+
+    // Utility format INR
+    const F = n => new Intl.NumberFormat('en-IN', { style:'currency', currency:'INR', maximumFractionDigits:0 }).format(n);
+
+    // Render cart summary and totals
+    function renderCart(){
+      const raw = getCart();
+      const container = document.getElementById('cartSummary');
+      container.innerHTML = '';
+      if(raw.length === 0){
+        container.innerHTML = '<div class="text-muted">Your cart is empty. <a href="products.html">Shop now</a></div>';
+        document.getElementById('subtotalText').innerText = F(0);
+        document.getElementById('taxText').innerText = F(0);
+        document.getElementById('shippingText').innerText = F(0);
+        document.getElementById('totalText').innerText = F(0);
+        return;
+      }
+
+      // group by id
+      const grouped = {};
+      raw.forEach(item => {
+        const id = item.id || 'unknown';
+        if(!grouped[id]) grouped[id] = { id, qty:0, price:0 };
+        grouped[id].qty++;
+        grouped[id].price += (item.price || 0);
+      });
+
+      // build DOM
+      let subtotal = 0;
+      Object.values(grouped).forEach(g => {
+        const p = g.price;
+        subtotal += p;
+        const product = PRODUCT_MAP[g.id] || { title: g.id, thumb: 'https://via.placeholder.com/120?text=Item' };
+        const el = document.createElement('div');
+        el.className = 'mb-3';
+        el.innerHTML = `
+          <div class="d-flex align-items-center">
+            <img src="${product.thumb}" alt="${product.title}" class="item-thumb me-3">
+            <div class="flex-fill">
+              <div class="fw-semibold">${product.title}</div>
+              <div class="muted-small">Qty: ${g.qty} · ${F(g.price)}</div>
+            </div>
+            <div class="text-end">
+              <button class="btn btn-sm btn-outline-danger" data-id="${g.id}" onclick="removeItem('${g.id}')">Remove</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(el);
+      });
+
+      // shipping rules
+      const FREE_SHIPPING_THRESHOLD = 100000; // ₹1,00,000 free
+      let shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 500;
+      // tax (GST) 5%
+      const tax = Math.round(subtotal * 0.05);
+      const total = subtotal + tax + shipping;
+
+      document.getElementById('subtotalText').innerText = F(subtotal);
+      document.getElementById('taxText').innerText = F(tax);
+      document.getElementById('shippingText').innerText = F(shipping);
+      document.getElementById('totalText').innerText = F(total);
+
+      // attach totals to form dataset for later use
+      const form = document.getElementById('orderForm');
+      form.dataset.subtotal = subtotal;
+      form.dataset.tax = tax;
+      form.dataset.shipping = shipping;
+      form.dataset.total = total;
+    }
+
+    // remove all units of an item (simple)
+    function removeItem(id){
+      const raw = getCart();
+      const remaining = raw.filter(i => i.id !== id);
+      saveCart(remaining);
+      renderCart();
+      updateCartCount();
+    }
+
+    // Promo code demo
+    document.getElementById('applyPromo').addEventListener('click', (e) => {
+      e.preventDefault();
+      const code = document.getElementById('promo').value.trim();
+      const node = document.getElementById('promoMsg');
+      const subtotal = parseInt(document.getElementById('orderForm').dataset.subtotal || 0, 10);
+      if(!code){ node.innerText = 'Enter a promo code.'; return; }
+      // demo code: GOLD10 => 10% off subtotal
+      if(code.toUpperCase() === 'GOLD10' && subtotal > 0){
+        const discount = Math.round(subtotal * 0.10);
+        const tax = Math.round((subtotal - discount) * 0.05);
+        const shipping = parseInt(document.getElementById('orderForm').dataset.shipping || 0, 10);
+        const total = (subtotal - discount) + tax + shipping;
+        document.getElementById('totalText').innerText = F(total);
+        node.innerText = `Promo applied: saved ${F(discount)}.`;
+        // store applied promo for order time
+        document.getElementById('orderForm').dataset.promo = code.toUpperCase();
+        document.getElementById('orderForm').dataset.promoValue = discount;
+      } else {
+        node.innerText = 'Invalid or inapplicable code.';
+      }
+    });
+
+    // Show/hide card fields
+    const payRadios = document.querySelectorAll('input[name="payment"]');
+    payRadios.forEach(r => r.addEventListener('change', toggleCardFields));
+    function toggleCardFields(){
+      const cardFields = document.getElementById('cardFields');
+      const sel = document.querySelector('input[name="payment"]:checked').value;
+      if(sel === 'card') cardFields.classList.remove('d-none'); else cardFields.classList.add('d-none');
+    }
+    toggleCardFields();
+
+    // Form submission & order creation
+    document.getElementById('orderForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const form = this;
+      form.classList.remove('was-validated');
+
+      // HTML5 validation
+      if(!form.checkValidity()){
+        form.classList.add('was-validated');
+        return;
+      }
+
+      // Extra simple validation for mock card if selected
+      const payment = document.querySelector('input[name="payment"]:checked').value;
+      if(payment === 'card'){
+        const cnum = document.getElementById('cardNumber').value.replace(/\s+/g,'');
+        if(cnum.length < 12){ alert('Enter demo card number'); return; }
+      }
+
+      // Build order
+      const raw = getCart();
+      if(raw.length === 0){ alert('Your cart is empty. Add items before placing an order.'); return; }
+
+      const grouped = {};
+      raw.forEach(item => {
+        const id = item.id || 'unknown';
+        if(!grouped[id]) grouped[id] = { id, qty:0, unitPrice:0, total:0 };
+        grouped[id].qty++;
+        grouped[id].unitPrice = item.price || grouped[id].unitPrice;
+        grouped[id].total += item.price || 0;
+      });
+
+      const items = Object.values(grouped);
+
+      const subtotal = parseInt(form.dataset.subtotal || 0, 10);
+      const tax = parseInt(form.dataset.tax || 0, 10);
+      const shipping = parseInt(form.dataset.shipping || 0, 10);
+      const promoValue = parseInt(form.dataset.promoValue || 0, 10);
+      const total = (subtotal - promoValue) + tax + shipping;
+
+      const order = {
+        id: 'ORD' + Date.now(),
+        createdAt: new Date().toISOString(),
+        customer: {
+          name: document.getElementById('fullName').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          address: document.getElementById('address').value.trim(),
+          city: document.getElementById('city').value.trim(),
+          state: document.getElementById('state').value.trim(),
+          zip: document.getElementById('zip').value.trim(),
+          notes: document.getElementById('notes').value.trim()
+        },
+        items,
+        totals: { subtotal, tax, shipping, promoValue, total },
+        payment: { method: payment, status: payment === 'cod' ? 'pending' : 'paid-mock' },
+      };
+
+      // Save order
+      const orders = getOrders();
+      orders.push(order);
+      saveOrders(orders);
+
+      // Clear cart
+      saveCart([]);
+      updateCartCount();
+
+      // Show confirmation
+      document.getElementById('confirmOrderId').innerText = order.id;
+      document.getElementById('confirmMsg').innerText = `Thanks ${order.customer.name}! We have received your order.`;
+      document.getElementById('orderConfirmation').classList.remove('d-none');
+
+      // allow invoice printing
+      document.getElementById('printInvoiceBtn').onclick = () => printInvoice(order);
+
+      // scroll to confirmation on small screens
+      document.getElementById('orderConfirmation').scrollIntoView({ behavior:'smooth' });
+
+      // hide form panel optionally
+      // document.querySelector('main .panel').classList.add('d-none');
+    });
+
+    // Invoice print: open a new window with printable HTML
+    function printInvoice(order){
+      const win = window.open('', '_blank', 'width=800,height=900');
+      const itemsHtml = order.items.map(it => {
+        const meta = PRODUCT_MAP[it.id] || { title: it.id, thumb: '' };
+        return `<tr>
+          <td style="padding:8px;border-bottom:1px solid #eee">${meta.title}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee; text-align:center">${it.qty}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee; text-align:right">${F(it.total)}</td>
+        </tr>`;
+      }).join('');
+      const html = `
+        <html><head><title>Invoice ${order.id}</title>
+          <style>
+            body{font-family: Arial, Helvetica, sans-serif; color:#222; padding:24px}
+            .header{display:flex;align-items:center;justify-content:space-between}
+            .logo{height:56px}
+            table{width:100%;border-collapse:collapse;margin-top:18px}
+            tfoot td{font-weight:700}
+          </style>
+        </head><body>
+          <div class="header">
+            <div>
+              <h2>Payal & Minal Gems</h2>
+              <div>33, Sant Tukaram Society-2, Surat</div>
+              <div>+91 70697 85900</div>
+            </div>
+            <div style="text-align:right">
+              <img src="assets/images/logo_minalgems.png" class="logo" alt="logo">
+            </div>
+          </div>
+
+          <hr>
+
+          <div>
+            <strong>Invoice:</strong> ${order.id}<br>
+            <strong>Date:</strong> ${new Date(order.createdAt).toLocaleString()}
+          </div>
+
+          <h4 style="margin-top:18px">Billed to</h4>
+          <div>${escapeHtml(order.customer.name)}<br>
+            ${escapeHtml(order.customer.address)}<br>
+            ${escapeHtml(order.customer.city)} ${escapeHtml(order.customer.state)} - ${escapeHtml(order.customer.zip)}<br>
+            ${escapeHtml(order.customer.phone)} • ${escapeHtml(order.customer.email)}
+          </div>
+
+          <table>
+            <thead>
+              <tr><th style="text-align:left;padding:8px;border-bottom:1px solid #ddd">Description</th><th style="padding:8px;border-bottom:1px solid #ddd">Qty</th><th style="padding:8px;border-bottom:1px solid #ddd;text-align:right">Amount</th></tr>
+            </thead>
+            <tbody>
+              ${itemsHtml}
+            </tbody>
+            <tfoot>
+              <tr><td colspan="2" style="padding:8px;border-top:1px solid #ddd">Subtotal</td><td style="padding:8px;border-top:1px solid #ddd;text-align:right">${F(order.totals.subtotal)}</td></tr>
+              <tr><td colspan="2" style="padding:8px">GST (5%)</td><td style="padding:8px;text-align:right">${F(order.totals.tax)}</td></tr>
+              <tr><td colspan="2" style="padding:8px">Shipping</td><td style="padding:8px;text-align:right">${F(order.totals.shipping)}</td></tr>
+              ${order.totals.promoValue ? `<tr><td colspan="2" style="padding:8px">Promo</td><td style="padding:8px;text-align:right">-${F(order.totals.promoValue)}</td></tr>` : ''}
+              <tr><td colspan="2" style="padding:8px;border-top:1px solid #ddd">Total</td><td style="padding:8px;border-top:1px solid #ddd;text-align:right">${F(order.totals.total)}</td></tr>
+            </tfoot>
+          </table>
+
+          <p style="margin-top:18px">Thank you for shopping with Payal & Minal Gems. For queries, reply to ${escapeHtml(order.customer.email)} or call +91 70697 85900.</p>
+
+          <script>window.print()</script>
+        </body></html>
+      `;
+      win.document.write(html);
+      win.document.close();
+    }
+
+    // small helper to escape text for HTML
+    function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    // init
+    document.addEventListener('DOMContentLoaded', function(){
+      renderCart();
+      updateCartCount();
+    });
+  </script>
+</body>
+</html>
