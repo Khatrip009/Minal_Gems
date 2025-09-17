@@ -1,1 +1,461 @@
-{\rtf1}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Jewellery Process — Payal & Minal Gems</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --primary-pink:#FF1493;
+      --luxury-gold:#FFD700;
+      --deep-black:#111827;
+      --charcoal:#4b5563;
+      --nav-bg: rgba(255,255,255,0.92);
+      --brand-gradient: linear-gradient(90deg,var(--primary-pink),var(--luxury-gold));
+      --font-heading:'Playfair Display', serif;
+      --font-body:'Poppins', sans-serif;
+      --card-radius:12px;
+    }
+
+    html,body{height:100%;}
+    body{
+      font-family:var(--font-body);
+      color:var(--charcoal);
+      background:#fff;
+      margin:0;
+      -webkit-font-smoothing:antialiased;
+    }
+    h1,h2,h3{ font-family:var(--font-heading); color:var(--deep-black); }
+    .muted-small{ color:#9ca3af; font-size:.95rem; }
+
+    /* NAV */
+    .navbar{
+      background: var(--nav-bg);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      padding: .6rem 0;
+    }
+    .navbar-brand img{ height:56px; object-fit:contain; }
+    .nav-link{ color:var(--charcoal) !important; font-weight:500; }
+
+    /* Page layout */
+    .hero {
+      background-image: url('https://images.unsplash.com/photo-1548702088-507b3b3b9f0b?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=a2f6d3e7b6c5d9e8f7a6b5c4d3e2f1a0');
+      background-size: cover;
+      background-position: center;
+      height: 44vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      position:relative;
+    }
+    .hero::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.25)); }
+    .hero .hero-inner { position:relative; z-index:2; text-align:center; padding:0 12px; }
+
+    .container-max { max-width:1100px; margin:0 auto; padding:44px 16px; }
+
+    .step-card { background:#fff; border-radius:12px; padding:18px; border:1px solid rgba(0,0,0,0.04); box-shadow:0 8px 24px rgba(16,24,40,0.04); }
+    .timeline { list-style:none; padding:0; margin:0; }
+    .timeline li { position:relative; padding-left:48px; margin-bottom:28px; }
+    .timeline li::before { content:''; position:absolute; left:20px; top:2px; width:12px; height:12px; border-radius:50%; background:var(--primary-pink); box-shadow:0 0 0 4px rgba(255,20,147,0.08); }
+    .timeline li h5{ margin-bottom:.3rem; }
+    .thumb { border-radius:10px; overflow:hidden; display:block; box-shadow:0 8px 30px rgba(0,0,0,0.06); }
+
+    .gallery-grid img{ width:100%; height:220px; object-fit:cover; border-radius:8px; }
+
+    .spec-table th{ width:170px; text-align:left; font-weight:600; padding-right:12px; }
+
+    footer{ background:var(--deep-black); color:#fff; padding:36px 0; margin-top:28px; }
+    footer a{ color:var(--primary-pink); }
+
+    @media(max-width:768px){
+      .hero{ height:32vh; }
+      .gallery-grid img{ height:150px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="assets/images/logo_minalgems.png" alt="Payal & Minal Gems Logo" />
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" aria-controls="navMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="products.html">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="diamonds.html">Diamonds</a></li>
+          <li class="nav-item"><a class="nav-link" href="gold.html">Gold</a></li>
+          <li class="nav-item"><a class="nav-link active" href="jewellery-process.html">Process</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+
+          <li class="nav-item ms-3 d-none d-lg-block">
+            <a class="btn btn-outline-dark btn-sm" href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+          </li>
+          <li class="nav-item ms-2 d-none d-lg-block">
+            <a class="btn btn-sm btn-primary" href="login.html">Login</a>
+          </li>
+
+          <li class="nav-item ms-2 d-flex align-items-center">
+            <button class="btn btn-outline-dark btn-sm me-2" onclick="goHome()">Home</button>
+            <button class="btn btn-outline-dark btn-sm" onclick="goBack()">Back</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-inner">
+      <h1 class="display-4">Our Jewellery Making Process</h1>
+      <p class="lead">From design concept to finished heirloom — how Payal & Minal Gems craft quality jewellery</p>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="container-max">
+
+    <!-- Overview -->
+    <section class="mb-5">
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <div class="step-card">
+            <h2>Overview — how a piece is made</h2>
+            <p>Creating fine jewellery is a multi-disciplinary process combining artistry, metallurgy, gemology and precision engineering. We follow a robust process: <strong>Concept → Design → Prototype → Manufacture (casting/fabrication) → Stone setting → Polishing & finishing → Quality control & certification → Packaging & delivery</strong>. Below are the details of each step, why they matter and what we do to ensure beauty, durability and traceability.</p>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="step-card">
+            <h5>Typical timeline</h5>
+            <p class="mb-1"><strong>Ready designs</strong>: 3–10 days (stock pieces)</p>
+            <p class="mb-1"><strong>Custom orders</strong>: 2–6 weeks depending on complexity</p>
+            <p class="mb-1"><strong>Repairs & resizing</strong>: 3–10 days</p>
+            <p class="muted-small mt-2">Timelines vary with material availability, gemstone sourcing and certification requirements.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step-by-step timeline -->
+    <section class="mb-5">
+      <h2 class="mb-3">Step-by-step — the full process</h2>
+
+      <ul class="timeline">
+        <li>
+          <h5>1) Concept & Design</h5>
+          <p>Everything starts with an idea — a sketch, mood board or customer's brief. Designers translate concepts into technical sketches, deciding proportions, sizes and gem placements. At this stage we select materials (karat, metal color), gemstone specifications and initial cost estimates.</p>
+        </li>
+
+        <li>
+          <h5>2) CAD / 3D Modelling</h5>
+          <p>Designs are modelled in CAD (Computer-Aided Design) software. CAD allows precise control over dimensions, prong geometry and stone seats. We create photorealistic renders so customers can visualise the finished piece and approve changes before prototyping.</p>
+        </li>
+
+        <li>
+          <h5>3) Prototyping (Wax / 3D Print)</h5>
+          <p>We produce a prototype using traditional hand-carved wax or modern 3D printing. Prototypes allow a tactile check of fit, scale and comfort and are essential for complex designs and custom commissions.</p>
+        </li>
+
+        <li>
+          <h5>4) Casting (Lost Wax)</h5>
+          <p>The approved wax model is invested in plaster, burnt out, and molten metal (gold/other alloy) is cast into the cavity. Casting yields accurate reproductions and is efficient for both single pieces and small batches.</p>
+        </li>
+
+        <li>
+          <h5>5) Fabrication & Hand-finishing</h5>
+          <p>For bespoke and high-end items, skilled goldsmiths fabricate parts by hand — cutting, forming, soldering, and fitting. Hand-finishing provides superior strength and a refined surface that machine-only processes often cannot match.</p>
+        </li>
+
+        <li>
+          <h5>6) Stone Setting</h5>
+          <p>Gemstone setting is a precision task: prongs are shaped, bezels are formed, and pavé stones are micro-set. Setting methods (prong, bezel, channel, pavé, tension) are selected for security and aesthetics. Every setting is inspected to ensure stones are secure.</p>
+        </li>
+
+        <li>
+          <h5>7) Polishing & Surface Finish</h5>
+          <p>Polishing brings the metal surface to a mirror finish or desired texture (satin, brushed). White gold pieces are rhodium-plated for a bright finish. Surface treatments are selected to match design intent and durability requirements.</p>
+        </li>
+
+        <li>
+          <h5>8) Quality Control & Hallmarking</h5>
+          <p>Each finished piece is inspected for dimensions, stone security, symmetry, polish and weight. Jewelry above threshold purity is hallmarked and documented. We provide certificates and invoices detailing metal content, gemstones and care instructions.</p>
+        </li>
+
+        <li>
+          <h5>9) Packaging & Delivery</h5>
+          <p>Pieces are carefully cleaned, packaged in branded boxes, accompanied by certificates, warranties and care instructions. For shipments, we use insured courier services and provide tracking and delivery confirmation.</p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Design & CAD -->
+    <section class="mb-5">
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="step-card">
+            <h3>Design — from sketch to CAD</h3>
+            <p>Design balances aesthetics with engineering. CAD provides exact tolerances for prongs, setting seats and band thickness. We simulate stresses and check that the design will wear well in real life (e.g., adequate metal thickness at stress points).</p>
+            <ul>
+              <li>Photorealistic renders for approval.</li>
+              <li>Dimensioned drawings for workshop reference.</li>
+              <li>Material selection and cost estimation integrated into the design stage.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="step-card">
+            <h3>Prototype methods</h3>
+            <p>We use both hand-carved wax and high-resolution resin 3D prints. 3D prints are faster for complex geometry; wax allows fine texture control. Prototypes also let clients try on a model to refine comfort and scale.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Casting vs Fabrication -->
+    <section class="mb-5">
+      <h3>Casting vs Fabrication — when we use each</h3>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="step-card">
+            <h5>Casting (best for)</h5>
+            <p>Complex, sculptural shapes; efficient small-batch production; faithful reproduction of CAD geometry.</p>
+            <p><strong>Pros:</strong> Accurate detail, quicker for multiple copies. <strong>Cons:</strong> Requires finishing to remove sprues and vents; porosity risk if not controlled.</p>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="step-card">
+            <h5>Fabrication (best for)</h5>
+            <p>Bespoke one-off pieces, heavy-duty items, heirloom restorations and designs needing hand finishing.</p>
+            <p><strong>Pros:</strong> Strong joins, artisanal control, excellent for unique pieces. <strong>Cons:</strong> Labour-intensive and higher making charges typically.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tools and materials -->
+    <section class="mb-5 section-light">
+      <h3>Tools, materials & lab equipment</h3>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="step-card">
+            <h6>Tools</h6>
+            <ul>
+              <li>Saws, files, hammers, mandrels</li>
+              <li>Soldering torches & micro-soldering rigs</li>
+              <li>Polishing motors, buffers & ultrasonic cleaners</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="step-card">
+            <h6>Modern equipment</h6>
+            <ul>
+              <li>3D printers (resin) and CAD workstations</li>
+              <li>XRF analyzers for metal analysis</li>
+              <li>Gem-setting microscopes and laser welders</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="step-card">
+            <h6>Materials</h6>
+            <ul>
+              <li>Gold, platinum, palladium, silver alloys</li>
+              <li>Certified diamonds & gemstones with lab reports</li>
+              <li>Polishing compounds, rhodium plating solution</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quality control & certification -->
+    <section class="mb-5">
+      <h3>Quality control & certification</h3>
+      <p>Quality is non-negotiable. Our QC includes:</p>
+      <ul>
+        <li>Dimensional checks and weight verification</li>
+        <li>Stone security (tug & visual tests)</li>
+        <li>Surface finish inspection (polish, plating uniformity)</li>
+        <li>Hallmarking and purity verification (XRF, assay when required)</li>
+        <li>Certificate issuance for diamonds and major gemstones</li>
+      </ul>
+      <div class="step-card mt-3">
+        <h6>Documentation provided</h6>
+        <ul>
+          <li>Tax invoice with metal weight, purity & making charges</li>
+          <li>Gemstone certificates (GIA/IGI/AGS etc.) where applicable</li>
+          <li>Warranty card and care instructions</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Sustainability & traceability -->
+    <section class="mb-5 section-light">
+      <h3>Sustainability, conflict-free sourcing & traceability</h3>
+      <p>We source responsibly: lab-certified diamonds or traceable supplier chains, recycled gold where possible, and ethical refiners. For high-value purchases we maintain chain-of-custody records and can provide supplier documentation on request.</p>
+      <p class="muted-small">If sustainability is a priority, ask about recycled-metal options and lab-grown gemstone alternatives — both reduce environmental footprint and are fully documented.</p>
+    </section>
+
+    <!-- Gallery -->
+    <section class="mb-5">
+      <h3 class="mb-3">Workshop gallery — stages of making</h3>
+      <div class="row g-3 gallery-grid">
+        <div class="col-6 col-md-3"><img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=43a1b5c0ab1c5e2a7e9d4c8b9f0a6b5c" alt="Design sketch" class="thumb"></div>
+        <div class="col-6 col-md-3"><img src="https://images.unsplash.com/photo-1596464716122-7b9c88c5f7ad?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=7a6a9b8c5d4e3f2a1b0c9d8e7f6a5b4c" alt="3D print" class="thumb"></div>
+        <div class="col-6 col-md-3"><img src="https://images.unsplash.com/photo-1583511655823-6f6a3b9f1a2b?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=5f4e3d2c1b0a9e8d7c6b5a4f3e2d1c0b" alt="Casting" class="thumb"></div>
+        <div class="col-6 col-md-3"><img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=2c3b4a5d6e7f8a9b0c1d2e3f4a5b6c7d" alt="Setting & polishing" class="thumb"></div>
+      </div>
+    </section>
+
+    <!-- Custom orders and repairs -->
+    <section class="mb-5">
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="step-card">
+            <h4>Custom Commissions</h4>
+            <p>We work with clients to create bespoke pieces: engagement rings, heirloom restorations, or conceptual showpieces. The process typically includes consultation, sketches, CAD approval, prototype, and final production. Pricing is quoted after material & gem selection and design finalization.</p>
+            <a href="contact.html" class="btn btn-primary mt-2">Request a commission</a>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="step-card">
+            <h4>Repairs & Resizing</h4>
+            <p>We repair prongs, replace stones, solder breaks and resize rings. We provide cleaning, re-plating and polishing. All repairs begin with a diagnostic inspection and written estimate.</p>
+            <a href="contact.html" class="btn btn-outline-dark mt-2">Book a repair</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing model -->
+    <section class="mb-5 section-light">
+      <h3>How pricing works</h3>
+      <p>Jewellery price = Metal value (weight × spot price adjusted for purity) + Gemstone value + Making charges (labour, finishing) + Taxes + Any certification or assay fees. For custom pieces additional costs include prototyping and special finishing.</p>
+
+      <table class="table table-borderless spec-table mt-3">
+        <tr><th>Metal pricing</th><td>Calculated from daily spot price and karat conversion (e.g., 18K = 75% gold × spot price).</td></tr>
+        <tr><th>Making charges</th><td>Depends on design complexity, fabrication method and hand-finishing time.</td></tr>
+        <tr><th>Certificate fees</th><td>Independent certification (e.g., GIA) is an additional cost for gemstones.</td></tr>
+      </table>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mb-5">
+      <h3>Process FAQ</h3>
+      <div class="accordion" id="processFaq">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="pfaq1">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pc1" aria-expanded="false" aria-controls="pc1">How long does a custom order take?</button>
+          </h2>
+          <div id="pc1" class="accordion-collapse collapse" aria-labelledby="pfaq1" data-bs-parent="#processFaq">
+            <div class="accordion-body">Custom timelines vary — simple modifications: 1–2 weeks. Complex bespoke work with gemstone sourcing and certification: 3–8 weeks. We give an exact estimate at consultation.</div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="pfaq2">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pc2" aria-expanded="false" aria-controls="pc2">Do you use recycled metals?</button>
+          </h2>
+          <div id="pc2" class="accordion-collapse collapse" aria-labelledby="pfaq2" data-bs-parent="#processFaq">
+            <div class="accordion-body">Yes — we offer recycled gold and silver options. Ask during your consultation if you prefer sustainably-sourced materials.</div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="pfaq3">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pc3" aria-expanded="false" aria-controls="pc3">Can I see prototypes before casting?</button>
+          </h2>
+          <div id="pc3" class="accordion-collapse collapse" aria-labelledby="pfaq3" data-bs-parent="#processFaq">
+            <div class="accordion-body">Absolutely — we present wax or 3D-printed prototypes for approval before final production so you can confirm scale and comfort.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact / consultation CTA -->
+    <section class="mb-5">
+      <div class="step-card">
+        <h3>Start your project</h3>
+        <p>Whether you want a bespoke engagement ring, a restoration, or a small repair — our team will guide you. Book a consultation or visit our workshop for a walkthrough.</p>
+        <div class="d-flex gap-2">
+          <a class="btn btn-primary" href="contact.html">Book a consultation</a>
+          <a class="btn btn-outline-dark" href="products.html">Browse collections</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="row gy-3">
+        <div class="col-md-4">
+          <img src="assets/images/logo_minalgems.png" alt="logo" style="height:56px;">
+          <p class="mt-2 small muted-small">Jewellery for all occasions. Certified diamonds, premium gold, reliable service.</p>
+        </div>
+
+        <div class="col-md-4">
+          <h6 class="mb-2">Quick Links</h6>
+          <ul class="list-unstyled small">
+            <li><a href="products.html">Shop</a></li>
+            <li><a href="diamonds.html">Diamonds</a></li>
+            <li><a href="gold.html">Gold</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="col-md-4">
+          <h6 class="mb-2">Contact</h6>
+          <p class="small mb-0">33, Sant Tukaram Society-2, Surat</p>
+          <p class="small mb-0">+91 70697 85900</p>
+          <p class="small"><a href="mailto:khatrip.009@gmail.com">khatrip.009@gmail.com</a></p>
+        </div>
+      </div>
+
+      <hr class="my-3" style="border-color: rgba(255,255,255,0.06);" />
+      <div class="text-center small text-muted">&copy; 2025 Payal & Minal Gems. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Shared navigation + cart helpers
+    function goHome() { window.location.href = 'index.html'; }
+    function goBack() {
+      if (document.referrer && document.referrer !== window.location.href) { history.back(); return; }
+      if (history.length > 1) { history.back(); return; }
+      window.location.href = 'index.html';
+    }
+
+    const CART_KEY = 'minalgems_cart_v1';
+    function getCart(){ try { return JSON.parse(localStorage.getItem(CART_KEY)) || [] } catch(e){ return [] } }
+    function saveCart(arr){ try { localStorage.setItem(CART_KEY, JSON.stringify(arr)); } catch(e){} }
+    function updateCartCount(){ const el=document.getElementById('cart-count'); if(el) el.innerText = getCart().length; }
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+  </script>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gold — Payal & Minal Gems</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --primary-pink:#FF1493;
+      --luxury-gold:#FFD700;
+      --deep-black:#111827;
+      --charcoal:#4b5563;
+      --nav-bg: rgba(255,255,255,0.92);
+      --brand-gradient: linear-gradient(90deg,var(--primary-pink),var(--luxury-gold));
+      --font-heading:'Playfair Display', serif;
+      --font-body:'Poppins', sans-serif;
+    }
+    html,body{height:100%;}
+    body{
+      font-family:var(--font-body);
+      color:var(--charcoal);
+      background:#fff;
+      margin:0;
+      -webkit-font-smoothing:antialiased;
+    }
+    h1,h2,h3{ font-family:var(--font-heading); color:var(--deep-black); }
+    .muted-small{ color:#9ca3af; font-size:.95rem; }
+
+    /* NAV */
+    .navbar{
+      background: var(--nav-bg);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      padding: .6rem 0;
+    }
+    .navbar-brand img{ height:56px; object-fit:contain; }
+    .nav-link{ color:var(--charcoal) !important; font-weight:500; }
+
+    /* Hero */
+    .hero {
+      background-image: url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=6a1a4c8b3c2b0e8f0b3d2c4f5f6a7b8c');
+      background-size: cover;
+      background-position: center;
+      height: 48vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      position:relative;
+    }
+    .hero::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.25)); }
+    .hero .hero-inner{ position:relative; z-index:2; text-align:center; padding: 0 16px; }
+
+    .section { padding: 44px 0; }
+    .section-light { background:#fbf8f5; }
+    .content-max { max-width: 1100px; margin: 0 auto; }
+
+    .gold-img { border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.06); width:100%; height:auto; }
+
+    .box { background:#fff; border-radius:10px; padding:18px; border:1px solid rgba(0,0,0,0.04); box-shadow:0 8px 30px rgba(16,24,40,0.04); }
+
+    .key-point { background: var(--luxury-gold); color:#111; display:inline-block; padding:6px 10px; border-radius:6px; font-weight:600; }
+
+    .spec-table td, .spec-table th { vertical-align: top; padding:8px 10px; border-top:1px solid #eef0f3; }
+    .spec-table th { width:180px; font-weight:600; color:var(--deep-black); background:transparent; border-top:none; }
+
+    footer{ background:var(--deep-black); color:#fff; padding:36px 0; }
+    footer a{ color:var(--luxury-gold); }
+
+    @media (max-width: 768px){
+      .hero { height: 34vh; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="assets/images/logo_minalgems.png" alt="Payal & Minal Gems Logo" />
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" aria-controls="navMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="products.html">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="diamonds.html">Diamonds</a></li>
+          <li class="nav-item"><a class="nav-link active" href="gold.html">Gold</a></li>
+          <li class="nav-item"><a class="nav-link" href="process.html">Process</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+
+          <li class="nav-item ms-3 d-none d-lg-block">
+            <a class="btn btn-outline-dark btn-sm" href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+          </li>
+          <li class="nav-item ms-2 d-none d-lg-block">
+            <a class="btn btn-sm btn-primary" href="login.html">Login</a>
+          </li>
+
+          <li class="nav-item ms-2 d-flex align-items-center">
+            <button class="btn btn-outline-dark btn-sm me-2" onclick="goHome()">Home</button>
+            <button class="btn btn-outline-dark btn-sm" onclick="goBack()">Back</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-inner">
+      <h1 class="display-4">All about Gold</h1>
+      <p class="lead">History, karats, colors, crafting methods, sourcing, testing and buying advice</p>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="section">
+    <div class="content-max">
+
+      <!-- Intro & quick facts -->
+      <section class="mb-4">
+        <div class="row g-4 align-items-center">
+          <div class="col-md-6">
+            <h2>Why gold matters</h2>
+            <p>Gold has been treasured since ancient times for its beauty, scarcity and chemical stability. Beyond jewellery it has served as currency, an industrial metal and a store of value. For jewellery, gold offers excellent ductility, a warm lustre and the ability to alloy with other metals to create different colors and mechanical properties.</p>
+            <p><span class="key-point">Quick facts:</span> Gold (Au) is a chemical element (atomic number 79), extremely malleable and resistant to tarnish; 1 gram of gold can be beaten into a sheet of many square meters.</p>
+          </div>
+          <div class="col-md-6">
+            <img src="https://images.unsplash.com/photo-1587678853879-1a9aa1bcd3ca?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=7b8a1b2f3c4d5e6f7a8b9c0d1e2f3a4b" alt="Gold bars and jewellery" class="gold-img">
+          </div>
+        </div>
+      </section>
+
+      <!-- History -->
+      <section class="mb-5 section-light">
+        <h2>History & cultural importance</h2>
+        <p>Gold’s use dates back thousands of years — from the ancient Egyptians' burial treasures to classical empires, through medieval coinage to modern investment and jewellery. Societies prized gold for rituals, adornment and as a visible sign of wealth and status. Different cultures developed their own techniques for working gold: granulation in ancient Etruria, filigree in South Asia, and sophisticated gem-setting in Europe.</p>
+        <p>Over centuries, gold also became central to global trade networks and monetary systems (the gold standard era). Today it remains both a luxury material and an industrial commodity used in electronics, medicine and aerospace.</p>
+      </section>
+
+      <!-- Karat system and purity -->
+      <section class="mb-5">
+        <h2>Karat & purity — what the numbers mean</h2>
+        <p>Gold in jewellery is almost never pure 24K (100% Au) because pure gold is very soft. Instead it is alloyed — mixed with other metals — to increase strength and create colors. The karat (K) system measures purity:</p>
+        <ul>
+          <li><strong>24K</strong> = 99.9%+ pure gold — very soft, usually used in bullion not everyday jewellery.</li>
+          <li><strong>22K</strong> = 91.6% gold — common in South Asia for traditional jewellery; softer than lower karats but rich in colour.</li>
+          <li><strong>18K</strong> = 75% gold — popular for high-end jewellery (good balance of purity & durability).</li>
+          <li><strong>14K</strong> = 58.5% gold — very common in Western markets for durable jewellery.</li>
+          <li><strong>10K</strong> = 41.7% gold — minimum karat that can be legally called gold in some countries (US).</li>
+        </ul>
+
+        <div class="box mt-3">
+          <h6>Karat vs Hallmark</h6>
+          <p>Karat indicates gold content; a hallmark is an official stamp marking purity and sometimes the assay office. Look for recognized hallmarks and maker marks when buying jewellery.</p>
+        </div>
+      </section>
+
+      <!-- Colors & alloys -->
+      <section class="mb-5 section-light">
+        <h2>Gold colors & alloys</h2>
+        <p>Gold’s color is modified by alloying metals. Popular color varieties:</p>
+        <div class="row g-3 mt-3">
+          <div class="col-md-4">
+            <div class="box h-100">
+              <h6>Yellow Gold</h6>
+              <p>Classic warm tone created by mixing gold with copper and silver. Widely used in traditional jewellery and wedding bands.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="box h-100">
+              <h6>White Gold</h6>
+              <p>Alloyed with white metals (nickel, palladium, zinc) and usually plated with rhodium for bright white finish. Rhodium plating may wear off and require re-plating over time.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="box h-100">
+              <h6>Rose / Pink Gold</h6>
+              <p>Contains higher copper content, giving a warm pink hue; extremely popular in modern and vintage-inspired pieces.</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="mt-3">Other color treatments include green gold (with silver & copper balance), grey golds (with palladium), and blackened finishes (surface treatments or alloys). Remember: color influences style, maintenance and price.</p>
+      </section>
+
+      <!-- Global sources & mining vs recycled -->
+      <section class="mb-5">
+        <h2>Where gold comes from — global supply</h2>
+        <p>Major gold-producing countries include China, Australia, Russia, United States, Peru, Ghana and South Africa. Mining ranges from large industrial open-pit operations to artisanal and small-scale mining. Responsible sourcing is important: look for suppliers with transparent supply chains and certifications.</p>
+
+        <h6 class="mt-3">Recycled gold</h6>
+        <p>A growing share of new jewellery uses recycled gold (refined from old jewellery and industrial scrap). Recycled gold reduces environmental impact since it avoids new mining. Many reputable jewellers now offer recycled-gold collections and track chain-of-custody.</p>
+      </section>
+
+      <!-- Crafting methods -->
+      <section class="mb-5 section-light">
+        <h2>Shaping & crafting gold — techniques</h2>
+        <p>Goldsmithing combines traditional handcraft with modern technology. Important methods include:</p>
+
+        <div class="row g-3 mt-3">
+          <div class="col-md-6">
+            <div class="box mb-3">
+              <h6>Casting (Lost-wax)</h6>
+              <p>A wax model is made, invested in plaster, burnt out and molten gold poured to produce the basic shape. Widely used for rings, pendants and complex shapes.</p>
+            </div>
+
+            <div class="box mb-3">
+              <h6>Forging & Fabrication</h6>
+              <p>Sheet and wire are cut, formed, soldered and hammered to create bespoke pieces. Fabrication gives strong, hand-finished results favored in artisanal jewellery.</p>
+            </div>
+
+            <div class="box mb-3">
+              <h6>Granulation & Filigree</h6>
+              <p>Ancient decorative techniques: granulation uses tiny gold beads; filigree uses twisted wires to form lace-like patterns, common in South Asia and Mediterranean jewellery.</p>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="box mb-3">
+              <h6>Electroforming & Plating</h6>
+              <p>Electroforming can create lightweight gold shells over models; plating (e.g., vermeil) coats a base metal with a layer of gold. Plated items are more affordable but plating thins over time.</p>
+            </div>
+
+            <div class="box mb-3">
+              <h6>Stone Setting & Finishing</h6>
+              <p>Stone setting (prong, bezel, pavé) secures gems; final finishing includes polishing, rhodium plating (for white gold), brushing or texturing to achieve desired look.</p>
+            </div>
+
+            <div class="box mb-3">
+              <h6>Modern tools</h6>
+              <p>CAD/CAM and 3D printing allow precise prototypes and efficient production, combined with traditional hand-finishing for quality pieces.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testing, hallmarking & certifications -->
+      <section class="mb-5">
+        <h2>Testing, Hallmarking & Certification</h2>
+        <p>Always confirm gold purity and authenticity. Common tests and marks:</p>
+        <ul>
+          <li><strong>Hallmarks:</strong> Government or assay office stamps indicating purity (e.g., 750 for 18K, 916 for 22K). Look for reputable assay marks or BIS hallmark (India), UK Assay Office marks, etc.</li>
+          <li><strong>Acid test:</strong> Quick field test showing reaction on touchstone — useful but can be imprecise and may leave micro-marks.</li>
+          <li><strong>XRF (X-ray fluorescence):</strong> Non-destructive analyzer that reports elemental composition — used by professionals and assay labs.</li>
+          <li><strong>Fire assay:</strong> Highly accurate destructive test for bullion and large lots; used for refining and official purposes.</li>
+        </ul>
+
+        <div class="box mt-3">
+          <h6>What to ask the jeweller</h6>
+          <p>Request the hallmark, a written description of karat & weight, and any warranty/service terms. For large purchases insist on lab assay or invoice detailing purity and maker.</p>
+        </div>
+      </section>
+
+      <!-- Pricing, market, ratings -->
+      <section class="mb-5 section-light">
+        <h2>Market pricing & ratings</h2>
+        <p>Gold price fluctuates daily on global markets (spot price). Jewellery pricing = metal value (based on daily gold rate × weight × purity) + making charges + gems + taxes. Ratings and quality depend on:</p>
+        <ul>
+          <li>Purity (karat), weight and current spot price</li>
+          <li>Craftsmanship and finish</li>
+          <li>Presence & quality of gemstones</li>
+          <li>Brand reputation, after-sales service and warranty</li>
+        </ul>
+
+        <p><strong>Buying tip:</strong> Obtain a full invoice with weight, purity (karat), making charges and tax breakdown. Compare making charges across stores; they vary by design complexity and brand.</p>
+      </section>
+
+      <!-- Care & maintenance -->
+      <section class="mb-5">
+        <h2>Care & maintenance</h2>
+        <ul>
+          <li>Clean gently with warm water and mild detergent, soft brush; rinse and dry thoroughly.</li>
+          <li>Avoid chlorine and harsh chemicals — they can damage alloys and settings.</li>
+          <li>Store separately in pouches to avoid scratching (gold can scratch other softer metals/gems).</li>
+          <li>Inspect prongs and mountings regularly; tighten or re-plate white/rhodium finishes when worn.</li>
+          <li>Insure high-value pieces and keep receipts/certificates for claims.</li>
+        </ul>
+      </section>
+
+      <!-- Sustainability & ethics -->
+      <section class="mb-5 section-light">
+        <h2>Sustainability & ethical sourcing</h2>
+        <p>Responsible jewellers prioritise:</p>
+        <ul>
+          <li>Supply chain transparency — traceability back to mines or refiners</li>
+          <li>Using recycled gold and responsible refiners</li>
+          <li>Audited suppliers and fair-labour practices</li>
+          <li>Third-party certifications (Responsible Jewellery Council, Fairmined, Fairtrade Gold)</li>
+        </ul>
+
+        <div class="box mt-3">
+          <h6>Questions to ask sellers</h6>
+          <p>Do you offer recycled gold? Can you provide supplier/refiner details? Do you support any responsible sourcing certifications?</p>
+        </div>
+      </section>
+
+      <!-- Shaping, mechanics & forming details -->
+      <section class="mb-5">
+        <h2>Metallurgy: forming, annealing & hardness</h2>
+        <p>Gold alloys are processed by heating (annealing), cold working (hammering/drawing) and heat treating to achieve the desired balance of ductility and hardness. Key points:</p>
+        <ul>
+          <li><strong>Annealing:</strong> Softens metal after work-hardened operations so it can be formed without cracking.</li>
+          <li><strong>Work hardening:</strong> Increases strength via hammering or rolling; excessive work hardening requires annealing.</li>
+          <li><strong>Soldering:</strong> Special solders (matching karat/color) join parts; proper soldering is essential for durability.</li>
+        </ul>
+      </section>
+
+      <!-- Availability & regional styles -->
+      <section class="mb-5 section-light">
+        <h2>Regional styles & availability</h2>
+        <p>Different regions favour different karats and designs:</p>
+        <ul>
+          <li><strong>India & South Asia:</strong> 22K and 24K traditional jewellery; heavy bridal sets and elaborate gold work.</li>
+          <li><strong>Middle East:</strong> High demand for 22K–24K and large, ornate pieces often with intricate filigree.</li>
+          <li><strong>Europe & North America:</strong> 14K–18K popular for daily-wear due to durability; modern minimal styles common.</li>
+          <li><strong>East Asia:</strong> Mixture — traditional yellow gold jewellery remains popular alongside contemporary 18K designs.</li>
+        </ul>
+      </section>
+
+      <!-- FAQ -->
+      <section class="mb-5">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="accordion" id="goldFaq">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="gq1">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ga1" aria-expanded="false" aria-controls="ga1">Is 22K better than 18K?</button>
+            </h2>
+            <div id="ga1" class="accordion-collapse collapse" aria-labelledby="gq1" data-bs-parent="#goldFaq">
+              <div class="accordion-body">22K has higher gold content and a richer colour but is softer; 18K is more durable and commonly used for fine jewellery with gemstones. Choose based on design, wear frequency and regional preference.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="gq2">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ga2" aria-expanded="false" aria-controls="ga2">How is making charge calculated?</button>
+            </h2>
+            <div id="ga2" class="accordion-collapse collapse" aria-labelledby="gq2" data-bs-parent="#goldFaq">
+              <div class="accordion-body">Making charges depend on design complexity, labour, finishing and brand. They are usually charged per gram or as a flat amount. Intricate handcrafted designs have higher making charges.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="gq3">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ga3" aria-expanded="false" aria-controls="ga3">Can gold be recycled?</button>
+            </h2>
+            <div id="ga3" class="accordion-collapse collapse" aria-labelledby="gq3" data-bs-parent="#goldFaq">
+              <div class="accordion-body">Yes — recycled gold is refined from old jewellery and industrial scrap. It’s chemically equivalent to newly mined gold and is gaining popularity for reducing environmental impact.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Glossary & resources -->
+      <section class="mb-5">
+        <h2>Glossary & helpful terms</h2>
+        <dl>
+          <dt>Karat</dt><dd>Measure of gold purity (24K = 100% gold).</dd>
+          <dt>Hallmark</dt><dd>Official stamp indicating purity and sometimes assay office.</dd>
+          <dt>Vermeil</dt><dd>Thick gold plating over sterling silver; higher quality plating standard.</dd>
+          <dt>Rhodium plating</dt><dd>Thin plating used on white gold to create bright white finish.</dd>
+          <dt>Alloy</dt><dd>Metals mixed with gold (e.g., copper, silver, palladium) to change color and mechanical properties.</dd>
+        </dl>
+      </section>
+
+      <!-- Contact and service -->
+      <section class="mb-5">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="box">
+              <h5>Want personalised advice?</h5>
+              <p>Book a consultation with our gold specialists — we’ll demonstrate karat differences, hallmark verification and show suitable designs for your needs.</p>
+              <a href="contact.html" class="btn btn-primary">Book consultation</a>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="box">
+              <h5>Trade-in & recycling services</h5>
+              <p>We offer vetted buyback options and recycling for old gold. Bring your items for assessment and receive transparent valuation based on purity and current market rates.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="row gy-3">
+        <div class="col-md-4">
+          <img src="assets/images/logo_minalgems.png" alt="logo" style="height:56px;">
+          <p class="mt-2 small muted-small">Jewellery for all occasions. Certified diamonds, premium gold, reliable service.</p>
+          <p class="small">Follow us:
+            <a href="#" aria-label="instagram">Instagram</a> ·
+            <a href="#" aria-label="facebook">Facebook</a>
+          </p>
+        </div>
+
+        <div class="col-md-4">
+          <h6 class="mb-2">Quick Links</h6>
+          <ul class="list-unstyled small">
+            <li><a href="products.html">Shop</a></li>
+            <li><a href="process.html">Process</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="col-md-4">
+          <h6 class="mb-2">Contact</h6>
+          <p class="small mb-0">33, Sant Tukaram Society-2, Surat</p>
+          <p class="small mb-0">+91 70697 85900</p>
+          <p class="small"><a href="mailto:khatrip.009@gmail.com">khatrip.009@gmail.com</a></p>
+        </div>
+      </div>
+
+      <hr class="my-3" style="border-color: rgba(255,255,255,0.06);" />
+      <div class="text-center small text-white-50">&copy; 2025 Payal & Minal Gems. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Shared navigation + cart helpers
+    function goHome() { window.location.href = 'index.html'; }
+    function goBack() {
+      if (document.referrer && document.referrer !== window.location.href) { history.back(); return; }
+      if (history.length > 1) { history.back(); return; }
+      window.location.href = 'index.html';
+    }
+
+    const CART_KEY = 'minalgems_cart_v1';
+    function getCart(){ try { return JSON.parse(localStorage.getItem(CART_KEY)) || [] } catch(e){ return [] } }
+    function saveCart(arr){ try { localStorage.setItem(CART_KEY, JSON.stringify(arr)); } catch(e){} }
+    function updateCartCount(){ const el=document.getElementById('cart-count'); if(el) el.innerText = getCart().length; }
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+  </script>
+</body>
+</html>

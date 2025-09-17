@@ -1,116 +1,463 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diamonds | Payal & Minal Jewellers</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Diamonds — Payal & Minal Jewellers</title>
+
+  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <style>
-    body { font-family: 'Poppins', sans-serif; background-color: #fafafa; color: #333; }
-    .hero { background: url('https://images.unsplash.com/photo-1523275335684-37898b6baf30') center/cover no-repeat; height: 60vh; color: #fff; display: flex; align-items: center; justify-content: center; text-shadow: 2px 2px 5px #000; }
-    .section-title { font-size: 2rem; margin-bottom: 1rem; text-align: center; color: #b88a44; }
-    .diamond-img { border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-    .process-step { background: #fff; border: 1px solid #eee; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    :root{
+      --primary-pink:#FF1493;
+      --luxury-gold:#FFD700;
+      --deep-black:#111827;
+      --charcoal:#4b5563;
+      --nav-bg: rgba(255,255,255,0.92);
+      --brand-gradient: linear-gradient(90deg,var(--primary-pink),var(--luxury-gold));
+      --font-heading:'Playfair Display', serif;
+      --font-body:'Poppins', sans-serif;
+    }
+    html,body{height:100%;}
+    body{
+      font-family:var(--font-body);
+      color:var(--charcoal);
+      background:#fff;
+      margin:0;
+      -webkit-font-smoothing:antialiased;
+    }
+    h1,h2,h3{ font-family:var(--font-heading); color:var(--deep-black); }
+    .muted-small{ color:#9ca3af; font-size:.95rem; }
+
+    /* NAV */
+    .navbar{
+      background: var(--nav-bg);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      padding: .6rem 0;
+    }
+    .navbar-brand img{ height:56px; object-fit:contain; }
+    .nav-link{ color:var(--charcoal) !important; font-weight:500; }
+
+    /* Hero */
+    .hero {
+      background-image: url('https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=9d8c1d6b3a8f3b5b5b3f6a2b7c8d9e0f');
+      background-size: cover;
+      background-position: center;
+      height: 52vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      position:relative;
+    }
+    .hero::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.25)); }
+    .hero .hero-inner{ position:relative; z-index:2; text-align:center; padding: 0 12px; }
+
+    .section { padding: 48px 0; }
+    .section-light { background:#f8f7fb; }
+    .content-max { max-width: 1100px; margin: 0 auto; }
+
+    .diamond-img { border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.06); width:100%; height:auto; }
+
+    .box { background:#fff; border-radius:10px; padding:18px; border:1px solid rgba(0,0,0,0.04); box-shadow:0 8px 30px rgba(16,24,40,0.04); }
+
+    .key-point { background: linear-gradient(90deg,var(--primary-pink),var(--luxury-gold)); color:#fff; display:inline-block; padding:6px 10px; border-radius:6px; font-weight:600; }
+
+    /* info table */
+    .spec-table td, .spec-table th { vertical-align: top; padding:8px 10px; border-top:1px solid #eef0f3; }
+    .spec-table th { width:180px; font-weight:600; color:var(--deep-black); background:transparent; border-top:none; }
+
+    footer{ background:var(--deep-black); color:#fff; padding:36px 0; }
+    footer a{ color:var(--primary-pink); }
+    @media (max-width: 768px){
+      .hero { height: 42vh; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Hero Section -->
-  <section class="hero text-center">
-    <div>
-      <h1 class="display-4 fw-bold">Discover the World of Diamonds</h1>
-      <p class="lead">Shapes, Cuts, and the Journey of Brilliance</p>
+  <!-- NAV -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="assets/images/logo_minalgems.png" alt="Payal & Minal Gems Logo" />
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" aria-controls="navMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="products.html">Shop</a></li>
+          <li class="nav-item"><a class="nav-link active" href="diamonds.html">Diamonds</a></li>
+          <li class="nav-item"><a class="nav-link" href="gold.html">Gold</a></li>
+          <li class="nav-item"><a class="nav-link" href="process.html">Process</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+
+          <li class="nav-item ms-3 d-none d-lg-block">
+            <a class="btn btn-outline-dark btn-sm" href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+          </li>
+          <li class="nav-item ms-2 d-none d-lg-block">
+            <a class="btn btn-sm btn-primary" href="login.html">Login</a>
+          </li>
+
+          <li class="nav-item ms-2 d-flex align-items-center">
+            <button class="btn btn-outline-dark btn-sm me-2" onclick="goHome()">Home</button>
+            <button class="btn btn-outline-dark btn-sm" onclick="goBack()">Back</button>
+          </li>
+        </ul>
+      </div>
     </div>
-  </section>
+  </nav>
 
-  <div class="container py-5">
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-inner">
+      <h1 class="display-4">Discover the World of Diamonds</h1>
+      <p class="lead">Shapes, cuts, grading, sourcing and how to buy with confidence</p>
+    </div>
+  </header>
 
-    <!-- Intro -->
-    <section>
-      <h2 class="section-title">Introduction to Diamonds</h2>
-      <p class="mb-4">Diamonds are one of nature’s most precious creations, formed deep within the Earth under immense pressure and heat. Renowned for their brilliance, fire, and timeless beauty, diamonds have become symbols of love, strength, and eternity. At Payal & Minal Jewellers, we bring you not only exquisite diamond jewellery but also deep insights into their origins, shapes, and craftsmanship.</p>
-      <div class="text-center">
-        <img src="https://images.unsplash.com/photo-1603561594306-f1e5f6f0a2a5" alt="Diamond" class="img-fluid diamond-img" width="600">
-      </div>
-    </section>
+  <!-- CONTENT -->
+  <main class="section section-light">
+    <div class="content-max">
 
-    <!-- Diamond Shapes -->
-    <section class="py-5">
-      <h2 class="section-title">Diamond Shapes</h2>
-      <p>Diamonds come in a variety of shapes, each designed to reflect light in unique ways. The most popular include round, princess, oval, emerald, marquise, and cushion. Every shape has its own character — from the classic sparkle of the round brilliant to the sophisticated step cuts of the emerald shape.</p>
+      <!-- Intro -->
+      <section class="mb-5">
+        <div class="row g-4 align-items-center">
+          <div class="col-md-6">
+            <h2>What is a diamond?</h2>
+            <p>Diamonds are a crystalline form of carbon created under high pressure and temperature deep inside the earth's mantle. They are valued for their optical properties — brilliance, fire and scintillation — and for their durability (the hardest natural material). A diamond’s desirability depends on many factors including cut, carat, color and clarity, often summarized as the <strong>4Cs</strong>.</p>
+            <p>At Payal & Minal Jewellers we source, cut and certify diamonds to ensure ethical sourcing, accurate grading and long-term value for our customers.</p>
+            <p><span class="key-point">Tip:</span> A well-cut diamond often appears larger and brighter than a larger poorly cut stone. Prioritise cut first when choosing a diamond for maximum visual impact.</p>
+          </div>
 
-      <div class="row text-center mt-4">
+          <div class="col-md-6">
+            <img src="https://images.unsplash.com/photo-1603561594306-f1e5f6f0a2a5?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=a9b3c0e4a7c6b0f2d5b4b4b6c8f1e2c3" alt="Diamond macro" class="diamond-img">
+          </div>
+        </div>
+      </section>
+
+      <!-- The 4Cs -->
+      <section class="mb-5">
+        <h2 class="mb-3">The 4Cs — Cut, Carat, Color, Clarity</h2>
+
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="box mb-3">
+              <h5>Cut (the most important)</h5>
+              <p>The cut determines how well a diamond’s facets interact with light. A precise cut increases brilliance and fire. Cut grades (as defined by GIA and other labs) typically range from Excellent/Ideal → Very Good → Good → Fair → Poor.</p>
+              <ul>
+                <li><strong>Proportions:</strong> Table size, crown angle, pavilion depth and girdle thickness influence light return and dispersion.</li>
+                <li><strong>Symmetry & Polish:</strong> Symmetry refers to how evenly the facets are arranged; polish describes surface finish. Excellent symmetry & polish improve sparkle.</li>
+                <li><strong>Visual impact:</strong> A slightly smaller but well-cut diamond will generally look more brilliant than a larger poorly-cut one.</li>
+              </ul>
+            </div>
+
+            <div class="box mb-3">
+              <h5>Carat (weight)</h5>
+              <p>Carat is the unit of weight for diamonds (1 carat = 200 mg). Carat affects price non-linearly: prices increase at popular weight thresholds (0.50, 0.75, 1.00 carat, etc.). Consider the following:</p>
+              <ul>
+                <li><strong>Face-up size vs weight:</strong> Two diamonds with the same carat can look different in diameter depending on cut depth and proportions.</li>
+                <li><strong>Price steps:</strong> Slightly under popular weights (e.g., 0.95 ct vs 1.00 ct) can save significantly while appearing visually similar.</li>
+                <li><strong>Budget strategy:</strong> Decide desired visual size first, then find the best cut and clarity within that size and budget.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="box mb-3">
+              <h5>Color</h5>
+              <p>Diamond color grading normally follows a scale from D (colorless) to Z (light yellow/brown). Colourless diamonds (D–F) are rare and command a premium. Near-colorless (G–J) offer great value and can appear colorless once mounted.</p>
+              <ul>
+                <li><strong>Fancy colors:</strong> Strongly colored diamonds (pink, blue, yellow) are graded and priced differently; they are called <em>fancy color diamonds</em>.</li>
+                <li><strong>Setting choice:</strong> A warm gold setting can mask slight body color; platinum or white gold emphasizes colorlessness.</li>
+              </ul>
+            </div>
+
+            <div class="box mb-3">
+              <h5>Clarity</h5>
+              <p>Clarity measures internal (inclusions) and external (blemishes) characteristics. Common clarity grades: FL (Flawless), IF (Internally Flawless), VVS1–VVS2, VS1–VS2, SI1–SI2, I1–I3.</p>
+              <ul>
+                <li><strong>Eye-clean:</strong> Many SI and even some I grade diamonds can be eye-clean (no visible inclusions to the naked eye). Choose based on whether the inclusion affects brilliance.</li>
+                <li><strong>Location matters:</strong> Inclusions under the table or near the edge impact appearance differently. Clear, well-placed inclusions can keep prices lower without affecting beauty.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <table class="spec-table w-100">
+            <tr><th>Which C to prioritise?</th><td>Cut, then Carat (size preference), then Color, then Clarity — balancing all four within your budget gives the best visual and value outcome.</td></tr>
+            <tr><th>How they affect price</th><td>Cut and Carat cause the steepest price differences; premium cuts and larger carat weights increase cost disproportionately compared to small changes in clarity or color.</td></tr>
+          </table>
+        </div>
+      </section>
+
+      <!-- Shapes & cuts -->
+      <section class="mb-5">
+        <h2 class="mb-3">Shapes & Popular Cuts</h2>
+        <p>Shapes describe the outline and facet arrangement. The cut is the facet configuration used to produce optical performance. Below are common shapes and what they offer:</p>
+
+        <div class="row g-3 mt-3">
+          <div class="col-sm-6 col-md-4">
+            <div class="box h-100">
+              <h6>Round Brilliant</h6>
+              <p>Most popular — optimized for maximum brilliance and fire with 57–58 facets. Ideal/Excellent cuts maximise light return.</p>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <div class="box h-100">
+              <h6>Princess</h6>
+              <p>Square silhouette with brilliant facet pattern; modern and sparkly. Offers excellent yield from rough stones.</p>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <div class="box h-100">
+              <h6>Emerald</h6>
+              <p>Step-cut with long facets; elegant, emphasizes clarity and color rather than brilliance.</p>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-4">
+            <div class="box h-100">
+              <h6>Oval</h6>
+              <p>Brilliant cut with elongated shape that can make the finger appear longer; watch for 'bow-tie' dark area.</p>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-4">
+            <div class="box h-100">
+              <h6>Marquise</h6>
+              <p>Elongated brilliant cut that maximizes perceived carat size; prone to chipping at points — consider protective setting.</p>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-4">
+            <div class="box h-100">
+              <h6>Cushion & Radiant</h6>
+              <p>Cushion has rounded corners and a vintage look; radiant blends emerald's outline with brilliant facets for sparkle.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cutting & polishing process -->
+      <section class="mb-5">
+        <h2 class="mb-3">Cutting, Polishing & Finishing — from rough to gem</h2>
+        <p>The transformation from rough diamond to polished gem is a careful, multi-step process combining science and craft:</p>
+
+        <ol class="mt-3">
+          <li><strong>Analysis & Planning:</strong> Experts (using tools like 3D mapping and scanning) determine optimal yield and cut to maximize value. Planning balances size vs clarity vs weight retention.</li>
+          <li><strong>Preforming / Sawing:</strong> The rough is sawn or laser-sliced into workable pieces; poor angles or rough inclusions are removed.</li>
+          <li><strong>Bruting / Shaping:</strong> The rough is shaped into the intended outline (especially important for round cuts).</li>
+          <li><strong>Faceting:</strong> The stone is faceted — crown, pavilion and table — to exact angles. Precision here affects light return directly.</li>
+          <li><strong>Polishing:</strong> Each facet is polished to optical smoothness. Polish grade (Excellent → Poor) is part of lab grading reports.</li>
+          <li><strong>Inspection & Certification:</strong> After cutting, diamonds are graded by independent labs (GIA, IGI, HRD, AGS, etc.) for the 4Cs and given a report or certificate.</li>
+        </ol>
+
+        <p><strong>Polish & Symmetry:</strong> Polish is about the surface finish; symmetry addresses the exactness of facet arrangement. Both affect the final appearance and are reported on certificates.</p>
+      </section>
+
+      <!-- Grading, certificates and labs -->
+      <section class="mb-5">
+        <h2 class="mb-3">Grading, Certificates & Trusted Labs</h2>
+        <p>Reputable diamonds come with a detailed grading report from an independent laboratory. Important labs include:</p>
+
+        <div class="row g-3 mt-3">
+          <div class="col-md-4">
+            <div class="box">
+              <h6>GIA (Gemological Institute of America)</h6>
+              <p>Globally respected for rigorous, consistent grading. GIA reports provide Cut, Carat, Color, Clarity, polish, symmetry and a plotted diagram of inclusions.</p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="box">
+              <h6>IGI (International Gemological Institute)</h6>
+              <p>Widely accepted; IGI reports include similar details to GIA and are common for finished jewellery inventory.</p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="box">
+              <h6>AGS, HRD & others</h6>
+              <p>AGS (notable for cut grading), HRD (Antwerp) and other labs are also trusted; always compare grading criteria and ask for a report copy.</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="mt-3"><strong>Tip:</strong> Always ask for a lab report copy and verify the report number on the issuing lab's online database when possible.</p>
+      </section>
+
+      <!-- Treatments & synthetics -->
+      <section class="mb-5">
+        <h2 class="mb-3">Treatments, Synthetic Diamonds & Detection</h2>
+        <p>Not all diamonds are entirely natural or untreated. Common categories to be aware of:</p>
+        <ul>
+          <li><strong>Untreated natural diamonds:</strong> Mined and polished without clarity or color enhancements — generally preferred and valued.</li>
+          <li><strong>Treated diamonds:</strong> Methods like laser drilling, fracture filling, high-temperature annealing or HPHT (High Pressure High Temperature) can improve appearance. Treated stones should be disclosed and priced accordingly.</li>
+          <li><strong>Lab-grown (synthetic) diamonds:</strong> Chemically and optically similar to natural diamonds but created in laboratories. They are an ethical and cost-effective option; they must be disclosed and usually come with their own certificates.</li>
+        </ul>
+
+        <p><strong>Detection:</strong> Modern laboratories have tools (spectroscopy, inclusion analysis, UV/fluorescence, growth pattern analysis) to distinguish treated, synthetic and natural diamonds. Buy from dealers who provide clear disclosure and lab documentation.</p>
+      </section>
+
+      <!-- Buying Guide -->
+      <section class="mb-5">
+        <h2 class="mb-3">How to choose a diamond — Buying guide</h2>
+
+        <ol>
+          <li><strong>Decide your budget & preferred visual size.</strong> Choose carat range and then prioritise the best cut within that budget.</li>
+          <li><strong>Prioritise cut and proportions.</strong> Choose the best cut grade you can afford — it most affects sparkle.</li>
+          <li><strong>Choose color based on setting.</strong> For white metal (platinum/white gold), aim for G–I/ D–F for premium colorlessness. For yellow gold, G–J+ can be excellent value.</li>
+          <li><strong>Choose clarity for eye-clean appearance.</strong> Look for SI1–VS grades that are eye-clean rather than paying for microscopic clarity where not necessary.</li>
+          <li><strong>Ask for a recent lab certificate.</strong> Verify serial/report number online; avoid sellers who can't provide documentation.</li>
+          <li><strong>Inspect in person when possible.</strong> Lighting and surroundings affect appearance; see the stone in similar lighting conditions to where it will be worn.</li>
+          <li><strong>Consider lifecycle factors.</strong> Insurance, servicing, resizing and trade-in policies—these affect long-term ownership.</li>
+        </ol>
+      </section>
+
+      <!-- Care & maintenance -->
+      <section class="mb-5">
+        <h2 class="mb-3">Care, Cleaning & Insurance</h2>
+        <p>Diamonds are hard but not indestructible. Follow these care tips:</p>
+        <ul>
+          <li>Regularly clean with warm water, mild detergent and a soft brush to remove oils and dirt that reduce brilliance.</li>
+          <li>Avoid ultrasonic cleaners for some treated or fragile settings; check with your jeweller first.</li>
+          <li>Store separately to avoid scratches to other gemstones or metalwork; diamonds can scratch softer gems.</li>
+          <li>Insure high-value items; keep photographs and copies of certificates and invoices for claims.</li>
+          <li>Have mounts and prongs checked annually to ensure stones are secure.</li>
+        </ul>
+      </section>
+
+      <!-- Ethical sourcing -->
+      <section class="mb-5">
+        <h2 class="mb-3">Ethical Sourcing & The Kimberley Process</h2>
+        <p>Responsible sourcing is essential. The Kimberley Process restricts trade in conflict diamonds, but credible dealers also follow supplier audits, chain-of-custody records and traceability practices. At Payal & Minal Jewellers, we:</p>
+        <ul>
+          <li>Prefer suppliers with documented origin controls and ethical mining policies.</li>
+          <li>Provide clear certification and disclosures for all natural diamonds.</li>
+          <li>Offer lab-grown diamond options for customers who prioritise sustainability and cost-effectiveness.</li>
+        </ul>
+      </section>
+
+      <!-- FAQ -->
+      <section class="mb-5">
+        <h2 class="mb-3">Frequently Asked Questions</h2>
+
+        <div class="accordion" id="faqAcc">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="faq1">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c1" aria-expanded="false" aria-controls="c1">Does a higher carat always mean a better diamond?</button>
+            </h2>
+            <div id="c1" class="accordion-collapse collapse" aria-labelledby="faq1" data-bs-parent="#faqAcc">
+              <div class="accordion-body">Not necessarily. A larger diamond with a poor cut or low clarity may appear duller than a smaller, well-cut, eye-clean diamond. Balance the 4Cs to match your priorities.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="faq2">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c2" aria-expanded="false" aria-controls="c2">Are lab-grown diamonds real?</button>
+            </h2>
+            <div id="c2" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAcc">
+              <div class="accordion-body">Lab-grown diamonds are chemically and optically the same as natural diamonds. They are created in controlled environments and are typically less expensive. They must be disclosed as lab-grown and come with their own certificates.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="faq3">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c3" aria-expanded="false" aria-controls="c3">How do I verify a diamond certificate?</button>
+            </h2>
+            <div id="c3" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAcc">
+              <div class="accordion-body">Most labs offer online verification by entering the report number on their website (e.g., GIA Report Check). If in doubt, ask the seller to show the original report and verify it with the issuing lab.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Summary & Contact -->
+      <section class="mb-5">
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="box">
+              <h5>Need help choosing?</h5>
+              <p>Our jewellery consultants can walk you through the 4Cs based on your budget and preferences and show you side-by-side comparisons. Book a consultation or visit the store for hands-on inspection.</p>
+              <a href="contact.html" class="btn btn-primary">Contact Us</a>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="box">
+              <h5>Certification & After-sales</h5>
+              <p>All diamonds sold by Payal & Minal Jewellers come with a certificate (GIA/IGI/AGS/HRD as appropriate) and a detailed invoice. We also provide lifetime servicing options and trusted buyback/trade-in programmes for qualified diamonds.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="row gy-3">
         <div class="col-md-4">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Diamond_round_brilliant.png" class="img-fluid diamond-img mb-2" alt="Round Cut">
-          <p><strong>Round Brilliant</strong></p>
+          <img src="assets/images/logo_minalgems.png" alt="logo" style="height:56px;">
+          <p class="mt-2 small muted-small">Jewellery for all occasions. Certified diamonds, premium gold, reliable service.</p>
+          <p class="small">Follow us:
+            <a href="#" aria-label="instagram">Instagram</a> ·
+            <a href="#" aria-label="facebook">Facebook</a>
+          </p>
         </div>
+
         <div class="col-md-4">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Princess_cut_diamond.png" class="img-fluid diamond-img mb-2" alt="Princess Cut">
-          <p><strong>Princess Cut</strong></p>
+          <h6 class="mb-2">Quick Links</h6>
+          <ul class="list-unstyled small">
+            <li><a href="products.html">Shop</a></li>
+            <li><a href="process.html">Process</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
         </div>
+
         <div class="col-md-4">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Emerald_cut_diamond.png" class="img-fluid diamond-img mb-2" alt="Emerald Cut">
-          <p><strong>Emerald Cut</strong></p>
+          <h6 class="mb-2">Contact</h6>
+          <p class="small mb-0">33, Sant Tukaram Society-2, Surat</p>
+          <p class="small mb-0">+91 70697 85900</p>
+          <p class="small"><a href="mailto:khatrip.009@gmail.com">khatrip.009@gmail.com</a></p>
         </div>
       </div>
-    </section>
 
-    <!-- Diamond Cutting Process -->
-    <section class="py-5">
-      <h2 class="section-title">Diamond Cutting Process</h2>
-      <p>The transformation of a rough diamond into a sparkling gem involves precision, artistry, and technology. Below is the step-by-step process:</p>
-
-      <div class="row mt-4">
-        <div class="col-md-6">
-          <div class="process-step">
-            <h5>1. Planning</h5>
-            <p>Experts analyze the rough diamond to determine the best cut, maximizing brilliance and minimizing waste.</p>
-          </div>
-          <div class="process-step">
-            <h5>2. Cleaving or Sawing</h5>
-            <p>The rough diamond is split or sawn into smaller, workable pieces using advanced laser technology.</p>
-          </div>
-          <div class="process-step">
-            <h5>3. Bruting</h5>
-            <p>In this step, the diamond is shaped into a round outline by grinding against another diamond.</p>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="process-step">
-            <h5>4. Polishing</h5>
-            <p>Facets are carefully cut and polished, bringing out the brilliance and fire of the diamond.</p>
-          </div>
-          <div class="process-step">
-            <h5>5. Inspection</h5>
-            <p>Each diamond undergoes rigorous quality control to ensure it meets international standards of clarity and cut.</p>
-          </div>
-          <div class="text-center mt-3">
-            <img src="https://images.unsplash.com/photo-1603561595308-78a196ee83d8" class="img-fluid diamond-img" alt="Diamond Cutting">
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- International Availability -->
-    <section class="py-5">
-      <h2 class="section-title">International Availability</h2>
-      <p>Diamonds are sourced globally, with major mining regions in Africa, Russia, Canada, and Australia. Each origin contributes unique characteristics to the diamonds, making them special and diverse. At Payal & Minal Jewellers, we ensure our diamonds are sourced responsibly, following ethical mining practices and global standards such as the Kimberley Process.</p>
-      <div class="row mt-4">
-        <div class="col-md-6">
-          <img src="https://images.unsplash.com/photo-1509043759401-136742328bb3" class="img-fluid diamond-img" alt="Diamond Mines">
-        </div>
-        <div class="col-md-6 d-flex align-items-center">
-          <p class="fs-5">Our commitment goes beyond beauty — it is about trust, transparency, and global excellence in every gem we deliver.</p>
-        </div>
-      </div>
-    </section>
-
-  </div>
-
-  <footer class="text-center py-4 bg-dark text-light">
-    <p>&copy; 2025 Payal & Minal Jewellers | All Rights Reserved</p>
+      <hr class="my-3" style="border-color: rgba(255,255,255,0.06);" />
+      <div class="text-center small text-white-50">&copy; 2025 Payal & Minal Gems. All rights reserved.</div>
+    </div>
   </footer>
 
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Shared navigation + cart helpers
+    function goHome() { window.location.href = 'index.html'; }
+    function goBack() {
+      if (document.referrer && document.referrer !== window.location.href) { history.back(); return; }
+      if (history.length > 1) { history.back(); return; }
+      window.location.href = 'index.html';
+    }
+
+    const CART_KEY = 'minalgems_cart_v1';
+    function getCart(){ try { return JSON.parse(localStorage.getItem(CART_KEY)) || [] } catch(e){ return [] } }
+    function saveCart(arr){ try { localStorage.setItem(CART_KEY, JSON.stringify(arr)); } catch(e){} }
+    function updateCartCount(){ const el=document.getElementById('cart-count'); if(el) el.innerText = getCart().length; }
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+  </script>
 </body>
 </html>
