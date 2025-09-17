@@ -1,0 +1,1099 @@
+-- ===================================
+-- Create Database
+-- ===================================
+CREATE DATABASE IF NOT EXISTS minalgemsDB;
+USE minalgemsDB;
+
+-- ================================
+-- 1. Company Profile (Vendor Info)
+-- ================================
+CREATE TABLE companies (
+    company_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    logo_url VARCHAR(500),
+    description TEXT,
+    email VARCHAR(255) UNIQUE,
+    phone VARCHAR(50),
+    address VARCHAR(500),
+    gst_number VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- ================================
+-- 2. Users / Customers
+-- ================================
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    company_id INT DEFAULT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    phone VARCHAR(50),
+    role ENUM('customer','admin','staff') DEFAULT 'customer',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (company_id) REFERENCES companies(company_id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- ================================
+-- 3. Categories
+-- ================================
+CREATE TABLE categories (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    company_id INT NOT NULL,
+    name VARCHAR(150) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (company_id) REFERENCES companies(company_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ================================
+-- 4. Products (Jewellery items)
+-- ================================
+CREATE TABLE products (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    company_id INT NOT NULL,
+    category_id INT,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(12,2) NOT NULL,
+    stock INT DEFAULT 0,
+    material ENUM('gold','diamond','platinum','silver','mixed') NOT NULL,
+    weight DECIMAL(10,2),
+    color VARCHAR(50),
+    making_process TEXT,
+    image_url VARCHAR(500),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (company_id) REFERENCES companies(company_id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES categories(category_id) ON DELETE SET NULL,
+    INDEX idx_category (category_id),
+    INDEX idx_company (company_id)
+) ENGINE=InnoDB;
+
+-- ================================
+-- 5. Diamonds (Special details)
+-- ================================
+CREATE TABLE diamonds (
+    diamond_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    shape VARCHAR(100),
+    cut VARCHAR(100),
+    carat DECIMAL(6,2),
+    clarity VARCHAR(50),
+    color_grade VARCHAR(50),
+    certification VARCHAR(255),
+    origin_country VARCHAR(100),
+    image_url VARCHAR(500),
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
+    INDEX idx_shape (shape),
+    INDEX idx_cut (cut)
+) ENGINE=InnoDB;
+
+-- ================================
+-- 6. Gold Details (Special Info)
+-- ================================
+CREATE TABLE gold_details (
+    gold_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    purity ENUM('24K','22K','18K','14K') NOT NULL,
+    color ENUM('yellow','white','rose','green') NOT NULL,
+    making_process TEXT,
+    origin_country VARCHAR(100),
+    image_url VARCHAR(500),
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ================================
+-- 7. Cart
+-- ================================
+CREATE TABLE cart (
+    cart_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE cart_items (
+    cart_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    cart_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT DEFAULT 1,
+    price DECIMAL(12,2) NOT NULL,
+    FOREIGN KEY (cart_id) REFERENCES cart(cart_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
+    INDEX idx_cart (cart_id)
+) ENGINE=InnoDB;
+
+-- ================================
+-- 8. Orders
+-- ================================
+CREATE TABLE orders (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    company_id INT NOT NULL,
+    total_amount DECIMAL(12,2) NOT NULL,
+    status ENUM('placed','processing','shipped','delivered','cancelled') DEFAULT 'placed',
+    shipping_address TEXT NOT NULL,
+    payment_status ENUM('pending','paid','failed') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (company_id) REFERENCES companies(company_id) ON DELETE CASCADE,
+    INDEX idx_user (user_id),
+    INDEX idx_status (status)
+) ENGINE=InnoDB;
+
+CREATE TABLE order_items (
+    order_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(12,2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ================================
+-- 9. Order Tracking
+-- ================================
+CREATE TABLE order_tracking (
+    tracking_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    status ENUM('placed','processing','shipped','delivered','cancelled') NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    remarks VARCHAR(255),
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
+    INDEX idx_order (order_id),
+    INDEX idx_status (status)
+) ENGINE=InnoDB;
+
+-- ================================
+-- 10. Audit / Logs (Optional future-proofing)
+-- ================================
+DROP TABLE IF EXISTS audit_logs;
+CREATE TABLE audit_logs (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    table_name VARCHAR(100),
+    action VARCHAR(255),
+    details TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- ================================
+-- 11. Product Reviews
+-- ================================
+CREATE TABLE reviews (
+    review_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    order_item_id INT NULL,
+    rating TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    title VARCHAR(255),
+    comment TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    -- Foreign Keys
+    CONSTRAINT fk_review_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_review_product FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
+    CONSTRAINT fk_review_order_item FOREIGN KEY (order_item_id) REFERENCES order_items(order_item_id) ON DELETE SET NULL,
+
+    -- Indexes
+    INDEX idx_review_product (product_id),
+    INDEX idx_review_user (user_id),
+    INDEX idx_review_order_item (order_item_id),
+    INDEX idx_review_rating (rating)
+) ENGINE=InnoDB;
+
+-- ================================
+-- 12. Review Replies
+-- ================================
+CREATE TABLE review_replies (
+    reply_id INT AUTO_INCREMENT PRIMARY KEY,
+    review_id INT NOT NULL,
+    employee_id INT NULL, -- Assumes employees table
+    reply_text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    -- Foreign Keys
+    CONSTRAINT fk_reply_review FOREIGN KEY (review_id) REFERENCES reviews(review_id) ON DELETE CASCADE,
+    -- CONSTRAINT fk_reply_employee FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE SET NULL,
+
+    INDEX idx_reply_review (review_id)
+) ENGINE=InnoDB;
+
+-- ================================
+-- 13. Order Feedback (New Table)
+-- ================================
+CREATE TABLE order_feedback (
+    feedback_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    user_id INT NOT NULL,
+    rating TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    comment TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_order_id (order_id),
+    INDEX idx_user_id (user_id)
+) ENGINE=InnoDB;
+
+-- ===================================
+-- VIEWS for Humanized Reports
+-- ===================================
+
+-- 1. Product Catalog View (with Category + Company + Material details)
+CREATE OR REPLACE VIEW v_product_catalog AS
+SELECT
+    p.product_id,
+    p.name AS product_name,
+    p.description,
+    p.price,
+    p.stock,
+    p.material,
+    p.weight,
+    p.color,
+    c.name AS category_name,
+    comp.name AS company_name,
+    p.created_at
+FROM products p
+LEFT JOIN categories c ON p.category_id = c.category_id
+LEFT JOIN companies comp ON p.company_id = comp.company_id;
+
+-- 2. Diamond Product Details View
+CREATE OR REPLACE VIEW v_diamond_details AS
+SELECT
+    d.diamond_id,
+    p.name AS product_name,
+    d.shape,
+    d.cut,
+    d.carat,
+    d.clarity,
+    d.color_grade,
+    d.certification,
+    d.origin_country,
+    d.image_url
+FROM diamonds d
+JOIN products p ON d.product_id = p.product_id;
+
+-- 3. Gold Product Details View
+CREATE OR REPLACE VIEW v_gold_details AS
+SELECT
+    g.gold_id,
+    p.name AS product_name,
+    g.purity,
+    g.color,
+    g.making_process,
+    g.origin_country,
+    g.image_url
+FROM gold_details g
+JOIN products p ON g.product_id = p.product_id;
+
+-- 4. Cart Summary View
+CREATE OR REPLACE VIEW v_cart_summary AS
+SELECT
+    ci.cart_item_id,
+    u.first_name AS customer_first_name,
+    u.last_name AS customer_last_name,
+    u.email AS customer_email,
+    p.name AS product_name,
+    ci.quantity,
+    ci.price,
+    (ci.quantity * ci.price) AS total_price,
+    c.cart_id,
+    c.created_at AS cart_created_at
+FROM cart_items ci
+JOIN cart c ON ci.cart_id = c.cart_id
+JOIN users u ON c.user_id = u.user_id
+JOIN products p ON ci.product_id = p.product_id;
+
+-- 5. Order Summary View
+CREATE OR REPLACE VIEW v_order_summary AS
+SELECT
+    o.order_id,
+    u.first_name AS customer_first_name,
+    u.last_name AS customer_last_name,
+    u.email AS customer_email,
+    comp.name AS company_name,
+    o.total_amount,
+    o.status AS order_status,
+    o.payment_status,
+    o.shipping_address,
+    o.created_at AS order_date
+FROM orders o
+JOIN users u ON o.user_id = u.user_id
+JOIN companies comp ON o.company_id = comp.company_id;
+
+-- 6. Order Items Details View
+CREATE OR REPLACE VIEW v_order_items AS
+SELECT
+    oi.order_item_id,
+    o.order_id,
+    u.email AS customer_email,
+    p.name AS product_name,
+    oi.quantity,
+    oi.price,
+    (oi.quantity * oi.price) AS line_total,
+    o.status AS order_status,
+    o.created_at AS order_date
+FROM order_items oi
+JOIN orders o ON oi.order_id = o.order_id
+JOIN users u ON o.user_id = u.user_id
+JOIN products p ON oi.product_id = p.product_id;
+
+-- 7. Order Tracking Timeline View
+CREATE OR REPLACE VIEW v_order_tracking AS
+SELECT
+    ot.tracking_id,
+    o.order_id,
+    u.email AS customer_email,
+    ot.status AS tracking_status,
+    ot.updated_at,
+    ot.remarks
+FROM order_tracking ot
+JOIN orders o ON ot.order_id = o.order_id
+JOIN users u ON o.user_id = u.user_id;
+
+-- 8. Customer Profile Report View
+CREATE OR REPLACE VIEW v_customer_profile AS
+SELECT
+    u.user_id,
+    u.first_name,
+    u.last_name,
+    u.email,
+    u.phone,
+    COUNT(DISTINCT o.order_id) AS total_orders,
+    SUM(o.total_amount) AS total_spent,
+    MAX(o.created_at) AS last_order_date
+FROM users u
+LEFT JOIN orders o ON u.user_id = o.user_id
+GROUP BY u.user_id;
+
+-- 9. Sales Report View (Revenue by Company & Category)
+CREATE OR REPLACE VIEW v_sales_report AS
+SELECT
+    comp.name AS company_name,
+    c.name AS category_name,
+    SUM(oi.quantity * oi.price) AS total_revenue,
+    COUNT(DISTINCT o.order_id) AS total_orders,
+    COUNT(DISTINCT u.user_id) AS total_customers
+FROM order_items oi
+JOIN orders o ON oi.order_id = o.order_id
+JOIN products p ON oi.product_id = p.product_id
+JOIN categories c ON p.category_id = c.category_id
+JOIN companies comp ON p.company_id = comp.company_id
+JOIN users u ON o.user_id = u.user_id
+WHERE o.status IN ('placed','processing','shipped','delivered')
+GROUP BY comp.name, c.name;
+
+-- 10. Human-readable product reviews
+CREATE OR REPLACE VIEW v_product_reviews AS
+SELECT
+    r.review_id,
+    CONCAT(u.first_name, ' ', u.last_name) AS customer_name,
+    p.name AS product_name,
+    r.rating,
+    r.title,
+    r.comment,
+    r.created_at
+FROM reviews r
+JOIN users u ON r.user_id = u.user_id
+JOIN products p ON r.product_id = p.product_id;
+
+-- 11. Product average ratings
+CREATE OR REPLACE VIEW v_product_ratings AS
+SELECT
+    p.product_id,
+    p.name AS product_name,
+    ROUND(AVG(r.rating),2) AS avg_rating,
+    COUNT(r.review_id) AS total_reviews
+FROM products p
+LEFT JOIN reviews r ON p.product_id = r.product_id
+GROUP BY p.product_id, p.name;
+
+-- 12. Company-wide customer satisfaction
+CREATE OR REPLACE VIEW v_company_feedback AS
+SELECT
+    comp.company_id,
+    comp.name AS company_name,
+    ROUND(AVG(r.rating),2) AS avg_rating,
+    COUNT(r.review_id) AS total_reviews
+FROM companies comp
+JOIN products p ON comp.company_id = p.company_id
+LEFT JOIN reviews r ON p.product_id = r.product_id
+GROUP BY comp.company_id, comp.name;
+
+-- 13. Order-level feedback summary
+CREATE OR REPLACE VIEW v_order_feedback_summary AS
+SELECT
+    o.order_id,
+    CONCAT(u.first_name, ' ', u.last_name) AS customer_name,
+    of.rating,
+    of.comment,
+    of.created_at
+FROM order_feedback of
+JOIN orders o ON of.order_id = o.order_id
+JOIN users u ON of.user_id = u.user_id;
+
+-- =====================================
+-- Stored Procedures
+-- =====================================
+
+-- 1. Place Order from Cart
+DELIMITER //
+CREATE PROCEDURE place_order (
+    IN p_user_id INT,
+    IN p_shipping_address TEXT
+)
+BEGIN
+    DECLARE v_total DECIMAL(12,2);
+    DECLARE v_company_id INT;
+    DECLARE v_cart_id INT;
+
+    -- Get user cart
+    SELECT cart_id INTO v_cart_id
+    FROM cart WHERE user_id = p_user_id
+    ORDER BY created_at DESC LIMIT 1;
+
+    -- Calculate total
+    SELECT SUM(ci.quantity * ci.price) INTO v_total
+    FROM cart_items ci
+    WHERE ci.cart_id = v_cart_id;
+
+    -- Find company (assuming same company for all items in cart)
+    SELECT p.company_id INTO v_company_id
+    FROM cart_items ci
+    JOIN products p ON ci.product_id = p.product_id
+    WHERE ci.cart_id = v_cart_id
+    LIMIT 1;
+
+    -- Insert into orders
+    INSERT INTO orders (user_id, company_id, total_amount, status, shipping_address, payment_status)
+    VALUES (p_user_id, v_company_id, v_total, 'placed', p_shipping_address, 'pending');
+
+    -- Insert items into order_items
+    INSERT INTO order_items (order_id, product_id, quantity, price)
+    SELECT LAST_INSERT_ID(), ci.product_id, ci.quantity, ci.price
+    FROM cart_items ci
+    WHERE ci.cart_id = v_cart_id;
+
+    -- Clear cart
+    DELETE FROM cart_items WHERE cart_id = v_cart_id;
+    DELETE FROM cart WHERE cart_id = v_cart_id;
+END //
+DELIMITER ;
+
+-- 2. Update Order Tracking
+DELIMITER //
+CREATE PROCEDURE update_order_tracking (
+    IN p_order_id INT,
+    IN p_status ENUM('placed','processing','shipped','delivered','cancelled'),
+    IN p_remarks VARCHAR(255)
+)
+BEGIN
+    -- Update orders table
+    UPDATE orders SET status = p_status WHERE order_id = p_order_id;
+
+    -- Insert into tracking log
+    INSERT INTO order_tracking (order_id, status, remarks)
+    VALUES (p_order_id, p_status, p_remarks);
+END //
+DELIMITER ;
+
+-- 3. Get Sales Report
+DELIMITER //
+CREATE PROCEDURE get_sales_report (
+    IN p_start_date DATE,
+    IN p_end_date DATE
+)
+BEGIN
+    SELECT
+        comp.name AS company_name,
+        c.name AS category_name,
+        SUM(oi.quantity * oi.price) AS total_revenue,
+        COUNT(DISTINCT o.order_id) AS total_orders,
+        COUNT(DISTINCT u.user_id) AS total_customers
+    FROM order_items oi
+    JOIN orders o ON oi.order_id = o.order_id
+    JOIN products p ON oi.product_id = p.product_id
+    JOIN categories c ON p.category_id = c.category_id
+    JOIN companies comp ON p.company_id = comp.company_id
+    JOIN users u ON o.user_id = u.user_id
+    WHERE o.created_at BETWEEN p_start_date AND p_end_date
+      AND o.status IN ('placed','processing','shipped','delivered')
+    GROUP BY comp.name, c.name;
+END //
+DELIMITER ;
+
+-- 4. Get Customer Profile
+DELIMITER //
+CREATE PROCEDURE get_customer_profile (
+    IN p_user_id INT
+)
+BEGIN
+    SELECT
+        u.user_id,
+        u.first_name,
+        u.last_name,
+        u.email,
+        u.phone,
+        COUNT(DISTINCT o.order_id) AS total_orders,
+        SUM(o.total_amount) AS total_spent,
+        MAX(o.created_at) AS last_order_date
+    FROM users u
+    LEFT JOIN orders o ON u.user_id = o.user_id
+    WHERE u.user_id = p_user_id
+    GROUP BY u.user_id;
+END //
+DELIMITER ;
+
+-- 5. Add Product
+DELIMITER //
+CREATE PROCEDURE add_product (
+    IN p_company_id INT,
+    IN p_category_id INT,
+    IN p_name VARCHAR(255),
+    IN p_description TEXT,
+    IN p_price DECIMAL(12,2),
+    IN p_stock INT,
+    IN p_material VARCHAR(50),
+    IN p_weight DECIMAL(10,2),
+    IN p_color VARCHAR(50),
+    IN p_making_process TEXT,
+    IN p_image_url VARCHAR(500)
+)
+BEGIN
+    INSERT INTO products
+    (company_id, category_id, name, description, price, stock, material, weight, color, making_process, image_url)
+    VALUES
+    (p_company_id, p_category_id, p_name, p_description, p_price, p_stock, p_material, p_weight, p_color, p_making_process, p_image_url);
+END //
+DELIMITER ;
+
+-- 6. Remove Product (Soft Delete)
+DELIMITER //
+CREATE PROCEDURE remove_product (
+    IN p_product_id INT
+)
+BEGIN
+    -- Instead of deleting, set stock to 0 and add "[DISCONTINUED]" tag
+    UPDATE products
+    SET stock = 0, name = CONCAT(name, ' [DISCONTINUED]')
+    WHERE product_id = p_product_id;
+END //
+DELIMITER ;
+
+-- 7. Register a New User and Create a Default Cart
+DELIMITER //
+CREATE PROCEDURE register_new_user (
+    IN p_first_name VARCHAR(100),
+    IN p_last_name VARCHAR(100),
+    IN p_email VARCHAR(255),
+    IN p_password_hash VARCHAR(255),
+    IN p_phone VARCHAR(50)
+)
+BEGIN
+    DECLARE new_user_id INT;
+
+    INSERT INTO users (first_name, last_name, email, password_hash, phone, role)
+    VALUES (p_first_name, p_last_name, p_email, p_password_hash, p_phone, 'customer');
+
+    SET new_user_id = LAST_INSERT_ID();
+
+    INSERT INTO cart (user_id) VALUES (new_user_id);
+END //
+DELIMITER ;
+
+-- 8. Update a User's Profile Information
+DELIMITER //
+CREATE PROCEDURE update_user_profile (
+    IN p_user_id INT,
+    IN p_first_name VARCHAR(100),
+    IN p_last_name VARCHAR(100),
+    IN p_email VARCHAR(255),
+    IN p_phone VARCHAR(50)
+)
+BEGIN
+    UPDATE users
+    SET
+        first_name = p_first_name,
+        last_name = p_last_name,
+        email = p_email,
+        phone = p_phone
+    WHERE user_id = p_user_id;
+END //
+DELIMITER ;
+
+-- 9. Add a New Staff Member
+DELIMITER //
+CREATE PROCEDURE add_staff_member (
+    IN p_company_id INT,
+    IN p_first_name VARCHAR(100),
+    IN p_last_name VARCHAR(100),
+    IN p_email VARCHAR(255),
+    IN p_password_hash VARCHAR(255),
+    IN p_phone VARCHAR(50)
+)
+BEGIN
+    INSERT INTO users (company_id, first_name, last_name, email, password_hash, phone, role)
+    VALUES (p_company_id, p_first_name, p_last_name, p_email, p_password_hash, p_phone, 'staff');
+END //
+DELIMITER ;
+
+-- 10. Add a Product with Diamond Details
+DELIMITER //
+CREATE PROCEDURE add_product_with_diamond (
+    IN p_company_id INT,
+    IN p_category_id INT,
+    IN p_name VARCHAR(255),
+    IN p_description TEXT,
+    IN p_price DECIMAL(12,2),
+    IN p_stock INT,
+    IN p_weight DECIMAL(10,2),
+    IN p_color VARCHAR(50),
+    IN p_making_process TEXT,
+    IN p_image_url VARCHAR(500),
+    IN p_shape VARCHAR(100),
+    IN p_cut VARCHAR(100),
+    IN p_carat DECIMAL(6,2),
+    IN p_clarity VARCHAR(50),
+    IN p_color_grade VARCHAR(50),
+    IN p_certification VARCHAR(255),
+    IN p_origin_country VARCHAR(100)
+)
+BEGIN
+    DECLARE new_product_id INT;
+
+    INSERT INTO products (company_id, category_id, name, description, price, stock, material, weight, color, making_process, image_url)
+    VALUES (p_company_id, p_category_id, p_name, p_description, p_price, p_stock, 'diamond', p_weight, p_color, p_making_process, p_image_url);
+
+    SET new_product_id = LAST_INSERT_ID();
+
+    INSERT INTO diamonds (product_id, shape, cut, carat, clarity, color_grade, certification, origin_country)
+    VALUES (new_product_id, p_shape, p_cut, p_carat, p_clarity, p_color_grade, p_certification, p_origin_country);
+END //
+DELIMITER ;
+
+-- 11. Update Product Stock (Manual Adjustment)
+DELIMITER //
+CREATE PROCEDURE update_product_stock (
+    IN p_product_id INT,
+    IN p_new_stock INT
+)
+BEGIN
+    UPDATE products
+    SET stock = p_new_stock
+    WHERE product_id = p_product_id;
+END //
+DELIMITER ;
+
+-- 12. Bulk Update Prices by Category
+DELIMITER //
+CREATE PROCEDURE bulk_update_prices (
+    IN p_category_id INT,
+    IN p_percentage_increase DECIMAL(5,2)
+)
+BEGIN
+    UPDATE products
+    SET price = price * (1 + p_percentage_increase / 100)
+    WHERE category_id = p_category_id;
+END //
+DELIMITER ;
+
+-- 13. Process a Payment for an Order
+DELIMITER //
+CREATE PROCEDURE process_payment (
+    IN p_order_id INT
+)
+BEGIN
+    UPDATE orders
+    SET payment_status = 'paid'
+    WHERE order_id = p_order_id;
+END //
+DELIMITER ;
+
+-- 14. Cancel an Order and Restore Stock
+DELIMITER //
+CREATE PROCEDURE cancel_order (
+    IN p_order_id INT
+)
+BEGIN
+    -- Restore stock for all products in the cancelled order
+    UPDATE products p
+    JOIN order_items oi ON p.product_id = oi.product_id
+    SET p.stock = p.stock + oi.quantity
+    WHERE oi.order_id = p_order_id;
+
+    -- Update order status to cancelled
+    UPDATE orders
+    SET status = 'cancelled'
+    WHERE order_id = p_order_id;
+END //
+DELIMITER ;
+
+-- 15. Add Order Feedback
+DELIMITER //
+CREATE PROCEDURE add_order_feedback (
+    IN p_order_id INT,
+    IN p_user_id INT,
+    IN p_rating TINYINT,
+    IN p_comment TEXT
+)
+BEGIN
+    INSERT INTO order_feedback (order_id, user_id, rating, comment)
+    VALUES (p_order_id, p_user_id, p_rating, p_comment);
+END //
+DELIMITER ;
+
+-- 16. Get Customer's Complete Order History
+DELIMITER //
+CREATE PROCEDURE get_customer_order_history (
+    IN p_user_id INT
+)
+BEGIN
+    SELECT
+        o.order_id,
+        o.created_at AS order_date,
+        o.total_amount,
+        o.status AS order_status,
+        o.payment_status,
+        oi.product_id,
+        p.name AS product_name,
+        oi.quantity,
+        oi.price
+    FROM orders o
+    JOIN order_items oi ON o.order_id = oi.order_id
+    JOIN products p ON oi.product_id = p.product_id
+    WHERE o.user_id = p_user_id
+    ORDER BY o.created_at DESC;
+END //
+DELIMITER ;
+
+-- 17. Generate Monthly Sales Report
+DELIMITER //
+CREATE PROCEDURE generate_monthly_report (
+    IN p_month INT,
+    IN p_year INT
+)
+BEGIN
+    SELECT
+        c.name AS company_name,
+        SUM(o.total_amount) AS monthly_revenue,
+        COUNT(o.order_id) AS total_orders,
+        COUNT(DISTINCT u.user_id) AS total_customers
+    FROM orders o
+    JOIN companies c ON o.company_id = c.company_id
+    JOIN users u ON o.user_id = u.user_id
+    WHERE
+        MONTH(o.created_at) = p_month AND YEAR(o.created_at) = p_year
+        AND o.status IN ('placed','processing','shipped','delivered')
+    GROUP BY c.name
+    ORDER BY monthly_revenue DESC;
+END //
+DELIMITER ;
+
+-- 18. Analyze Customer Reviews
+DELIMITER //
+CREATE PROCEDURE analyze_customer_reviews ()
+BEGIN
+    SELECT
+        p.name AS product_name,
+        AVG(r.rating) AS average_rating,
+        COUNT(r.review_id) AS review_count,
+        GROUP_CONCAT(CONCAT(u.first_name, ' ', u.last_name, ' (', r.rating, ' stars): ', r.comment) ORDER BY r.created_at DESC SEPARATOR ' | ') AS all_comments
+    FROM products p
+    JOIN reviews r ON p.product_id = r.product_id
+    JOIN users u ON r.user_id = u.user_id
+    GROUP BY p.product_id, p.name
+    ORDER BY average_rating DESC;
+END //
+DELIMITER ;
+DELIMITER ;
+
+-- =====================================
+-- Triggers
+-- =====================================
+
+-- 1. Prevent Orders if Stock is Insufficient
+DELIMITER //
+CREATE TRIGGER trg_before_order_item_insert
+BEFORE INSERT ON order_items
+FOR EACH ROW
+BEGIN
+    DECLARE v_stock INT;
+
+    -- Get stock for the product
+    SELECT stock INTO v_stock
+    FROM products
+    WHERE product_id = NEW.product_id;
+
+    -- If not enough stock, throw error
+    IF v_stock < NEW.quantity THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Insufficient stock for this product';
+    END IF;
+END //
+DELIMITER ;
+
+-- 2. Reduce Stock Automatically After Order Item Insert
+DELIMITER //
+CREATE TRIGGER trg_after_order_item_insert
+AFTER INSERT ON order_items
+FOR EACH ROW
+BEGIN
+    UPDATE products
+    SET stock = stock - NEW.quantity
+    WHERE product_id = NEW.product_id;
+END //
+DELIMITER ;
+
+-- 3. Restore Stock if Order Item is Deleted (e.g., order cancelled)
+DELIMITER //
+CREATE TRIGGER trg_after_order_item_delete
+AFTER DELETE ON order_items
+FOR EACH ROW
+BEGIN
+    UPDATE products
+    SET stock = stock + OLD.quantity
+    WHERE product_id = OLD.product_id;
+END //
+DELIMITER ;
+
+-- 4. Log Every User Insert/Update/Delete in Audit Table
+DELIMITER //
+CREATE TRIGGER trg_users_insert
+AFTER INSERT ON users
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_logs (user_id, table_name, action, details)
+    VALUES (NEW.user_id, 'users', 'INSERT',
+            CONCAT('New user registered: ', NEW.email));
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER trg_users_update
+AFTER UPDATE ON users
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_logs (user_id, table_name, action, details)
+    VALUES (NEW.user_id, 'users', 'UPDATE',
+            CONCAT('User updated: ', NEW.email));
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER trg_users_delete
+AFTER DELETE ON users
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_logs (user_id, table_name, action, details)
+    VALUES (OLD.user_id, 'users', 'DELETE',
+            CONCAT('User deleted: ', OLD.email));
+END //
+DELIMITER ;
+
+-- 5. Auto Insert Tracking Log on New Order
+DELIMITER //
+CREATE TRIGGER trg_after_order_insert
+AFTER INSERT ON orders
+FOR EACH ROW
+BEGIN
+    INSERT INTO order_tracking (order_id, status, remarks)
+    VALUES (NEW.order_id, NEW.status, 'Order created');
+END //
+DELIMITER ;
+
+-- 6. Log Product Changes
+DELIMITER //
+CREATE TRIGGER trg_products_insert
+AFTER INSERT ON products
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_logs (user_id, table_name, action, details)
+    VALUES (NULL, 'products', 'INSERT',
+            CONCAT('Product added: ', NEW.name));
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER trg_products_update
+AFTER UPDATE ON products
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_logs (user_id, table_name, action, details)
+    VALUES (NULL, 'products', 'UPDATE',
+            CONCAT('Product updated: ', NEW.name));
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER trg_products_delete
+AFTER DELETE ON products
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_logs (user_id, table_name, action, details)
+    VALUES (NULL, 'products', 'DELETE',
+            CONCAT('Product deleted: ', OLD.name));
+END //
+DELIMITER ;
+
+-- =====================================
+-- Sample Queries (for testing and reporting)
+-- =====================================
+
+-- 1. Daily Sales Summary
+SELECT
+    DATE(o.created_at) AS sale_date,
+    SUM(o.total_amount) AS total_revenue,
+    COUNT(DISTINCT o.order_id) AS total_orders,
+    COUNT(DISTINCT o.user_id) AS unique_customers
+FROM orders o
+WHERE o.status IN ('placed','processing','shipped','delivered')
+GROUP BY DATE(o.created_at)
+ORDER BY sale_date DESC;
+
+-- 2. Top 5 Customers by Spending
+SELECT
+    CONCAT(u.first_name, ' ', u.last_name) AS customer_name,
+    u.email,
+    SUM(o.total_amount) AS total_spent,
+    COUNT(o.order_id) AS total_orders
+FROM users u
+JOIN orders o ON u.user_id = o.user_id
+WHERE o.status IN ('placed','processing','shipped','delivered')
+GROUP BY u.user_id, customer_name, u.email
+ORDER BY total_spent DESC
+LIMIT 5;
+
+-- 3. Pending Orders (Need Action)
+SELECT
+    o.order_id,
+    CONCAT(u.first_name, ' ', u.last_name) AS customer_name,
+    o.total_amount,
+    o.status,
+    o.created_at
+FROM orders o
+JOIN users u ON o.user_id = u.user_id
+WHERE o.status IN ('pending','placed','processing')
+ORDER BY o.created_at ASC;
+
+-- 4. Daily Revenue Trend (Last 7 Days)
+SELECT
+    DATE(created_at) AS day,
+    SUM(total_amount) AS revenue,
+    COUNT(order_id) AS total_orders
+FROM orders
+WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+  AND status IN ('placed','processing','shipped','delivered')
+GROUP BY DATE(created_at)
+ORDER BY day ASC;
+
+-- 5. Product Categories Performance
+SELECT
+    c.name AS category_name,
+    SUM(oi.quantity) AS units_sold,
+    SUM(oi.quantity * oi.price) AS revenue_generated
+FROM order_items oi
+JOIN products p ON oi.product_id = p.product_id
+JOIN categories c ON p.category_id = c.category_id
+JOIN orders o ON oi.order_id = o.order_id
+WHERE o.status IN ('placed','processing','shipped','delivered')
+GROUP BY c.name
+ORDER BY revenue_generated DESC;
+
+-- 6. Company-Wise Sales Performance
+SELECT
+    comp.name AS company_name,
+    SUM(oi.quantity) AS total_units_sold,
+    SUM(oi.quantity * oi.price) AS total_revenue
+FROM order_items oi
+JOIN products p ON oi.product_id = p.product_id
+JOIN companies comp ON p.company_id = comp.company_id
+JOIN orders o ON oi.order_id = o.order_id
+WHERE o.status IN ('placed','processing','shipped','delivered')
+GROUP BY comp.name
+ORDER BY total_revenue DESC;
+
+-- 7. Low Stock Products (Below 10 Units)
+SELECT
+    p.product_id,
+    p.name AS product_name,
+    c.name AS category_name,
+    comp.name AS company_name,
+    p.stock
+FROM products p
+JOIN categories c ON p.category_id = c.category_id
+JOIN companies comp ON p.company_id = comp.company_id
+WHERE p.stock < 10
+ORDER BY p.stock ASC;
+
+-- 8. Order Tracking Report for Customers
+SELECT
+    o.order_id,
+    CONCAT(u.first_name, ' ', u.last_name) AS customer_name,
+    o.total_amount,
+    GROUP_CONCAT(CONCAT(ot.status, ' at ', ot.updated_at) ORDER BY ot.updated_at ASC SEPARATOR ' → ') AS full_tracking
+FROM orders o
+JOIN users u ON o.user_id = u.user_id
+JOIN order_tracking ot ON o.order_id = ot.order_id
+GROUP BY o.order_id, customer_name, o.total_amount
+ORDER BY o.created_at DESC;
+
+-- 9. Top rated products
+SELECT product_name, avg_rating, total_reviews
+FROM v_product_ratings
+ORDER BY avg_rating DESC, total_reviews DESC
+LIMIT 10;
+
+-- 10. Customers who give lowest ratings (for service recovery)
+SELECT
+    customer_name,
+    rating,
+    comment,
+    created_at
+FROM v_product_reviews
+WHERE rating <= 2
+ORDER BY created_at DESC;
+
+-- 11. Products with no reviews (need marketing push)
+SELECT p.product_id, p.name
+FROM products p
+LEFT JOIN reviews r ON p.product_id = r.product_id
+WHERE r.review_id IS NULL;
+
+DELIMITER //
+
+-- =====================================
+-- 1. Cart Management Procedures
+-- =====================================
+
+-- Add a product to a user's cart
+CREATE PROCEDURE add_to_cart (
+    IN p_user_id INT,
+    IN p_product_id INT,
+    IN p_quantity INT
+)
+BEGIN
+    DECLARE v_cart_id INT;
+    DECLARE v_price DECIMAL(12,2);
+
+    -- Get the user's cart_id
+    SELECT cart_id INTO v_cart_id FROM cart WHERE user_id = p_user_id LIMIT 1;
+
+    -- Get the product price
+    SELECT price INTO v_price FROM products WHERE product_id = p_product_id;
+
+    -- Check if item already exists in cart, then update quantity
+    IF EXISTS (SELECT 1 FROM cart_items WHERE cart_id = v_cart_id AND product_id = p_product_id) THEN
+        UPDATE cart_items
+        SET quantity = quantity + p_quantity
+        WHERE cart_id = v_cart_id AND product_id = p_product_id;
+    ELSE
+        -- Otherwise, insert a new item
+        INSERT INTO cart_items (cart_id, product_id, quantity, price)
+        VALUES (v_cart_id, p_product_id, p_quantity, v_price);
+    END IF;
+END //
+DELIMITER ;

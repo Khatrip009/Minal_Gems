@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Order Confirmation — Payal & Minal Gems</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>.tracking-step{padding:15px;border-radius:10px;border:1px solid #eee;margin-bottom:12px}.tracking-step.active{background:#fff8e6;border-color:#ffd700}</style>
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <div class="card p-4">
+      <h3 id="orderTitle">Order Received</h3>
+      <p id="orderSummary" class="text-muted"></p>
+
+      <div id="orderItems" class="mb-3"></div>
+
+      <h5>Order Tracking</h5>
+      <div id="tracking">
+        <div class="tracking-step active" id="st_placed"><strong>Placed</strong><div class="small text-muted">We received your order.</div></div>
+        <div class="tracking-step" id="st_processing"><strong>Processing</strong><div class="small text-muted">Your items are being prepared.</div></div>
+        <div class="tracking-step" id="st_shipped"><strong>Shipped</strong><div class="small text-muted">On the way to you.</div></div>
+        <div class="tracking-step" id="st_delivered"><strong>Delivered</strong><div class="small text-muted">Order delivered.</div></div>
+      </div>
+
+      <div class="mt-4">
+        <a href="product-explorer.html" class="btn btn-outline-secondary">Continue Shopping</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const ORDER_KEY = 'pmg_last_order';
+      function readOrder() {
+        try {
+          return JSON.parse(localStorage.getItem(ORDER_KEY) || '{}');
+        } catch (e) { return {}; }
+      }
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get('order');
+      // try read last order
+      const order = readOrder() || {};
+      // fallback: if order.id mismatches query, still use stored
+      document.getElementById('orderTitle').innerText = order.id ? `Thank you — ${order.id}` : 'Thank you — Order Received';
+      const summary = order.totals ? `Total <strong>₹${Number(order.totals.total || 0).toLocaleString('en-IN')}</strong>` : '';
+      document.getElementById('orderSummary').innerHTML = summary + (order.createdAt ? `<div class="small text-muted">Placed on ${new Date(order.createdAt).toLocaleString()}</div>` : '');
+
+      const itemsEl = document.getElementById('orderItems');
+      if (order.items && order.items.length) {
+        itemsEl.innerHTML = '<ul class="list-unstyled">';
+        order.items.forEach(it => {
+          itemsEl.innerHTML += `<li class="py-2 border-bottom"><strong>${it.title}</strong> <div class="small text-muted">Qty: ${it.qty} • ₹${(it.price*it.qty).toLocaleString('en-IN')}</div></li>`;
+        });
+        itemsEl.innerHTML += '</ul>';
+      } else {
+        itemsEl.innerHTML = '<p class="text-muted">No items found for this order (demo).</p>';
+      }
+
+      // (Optional) Simulate status progression for demo
+      let statusIndex = 0;
+      const steps = ['st_placed','st_processing','st_shipped','st_delivered'];
+      function advance() {
+        if (statusIndex < steps.length) {
+          document.getElementById(steps[statusIndex]).classList.add('active');
+          statusIndex++;
+        }
+      }
+      // show placed immediately
+      advance();
+      // auto-advance every 8 seconds as demo (remove in production)
+      setInterval(advance, 8000);
+    })();
+  </script>
+</body>
+</html>

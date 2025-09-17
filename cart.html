@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart | Payal & Minal Jewellers</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #fafafa; }
+    .cart-item { border-bottom: 1px solid #eee; padding: 15px 0; }
+    .cart-total { background: #fff8e1; border-radius: 10px; padding: 20px; }
+    .btn-gold { background-color: #b88a44; color: #fff; }
+    .btn-gold:hover { background-color: #a0783c; }
+  </style>
+</head>
+<body>
+  <div class="container py-5">
+    <h2 class="mb-4">Your Shopping Cart</h2>
+    <div class="row">
+      <div class="col-md-8">
+        <!-- Item 1 -->
+        <div class="cart-item d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center">
+            <img src="https://images.unsplash.com/photo-1600180758895-6fc33896c3a7" class="img-thumbnail" width="80">
+            <div class="ms-3">
+              <h5>Diamond Ring</h5>
+              <p class="mb-1">18K White Gold | Round Brilliant Diamond</p>
+              <p class="fw-bold">₹45,000</p>
+            </div>
+          </div>
+          <div>
+            <input type="number" value="1" min="1" class="form-control" style="width: 70px;">
+          </div>
+        </div>
+        <!-- Item 2 -->
+        <div class="cart-item d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center">
+            <img src="https://images.unsplash.com/photo-1603808033192-518c10ff32e7" class="img-thumbnail" width="80">
+            <div class="ms-3">
+              <h5>Gold Necklace</h5>
+              <p class="mb-1">22K Yellow Gold</p>
+              <p class="fw-bold">₹75,000</p>
+            </div>
+          </div>
+          <div>
+            <input type="number" value="1" min="1" class="form-control" style="width: 70px;">
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="cart-total shadow-sm">
+          <h5>Order Summary</h5>
+          <p>Subtotal: <strong>₹1,20,000</strong></p>
+          <p>Taxes: <strong>₹6,000</strong></p>
+          <h5>Total: ₹1,26,000</h5>
+          <a href="order.html" class="btn btn-gold w-100 mt-3">Proceed to Checkout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<!-- in footer / before </body> -->
+<script src="assets/js/main.js"></script>
+<script src="assets/js/cart.js"></script>
+
+</html>

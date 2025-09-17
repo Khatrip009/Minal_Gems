@@ -1,0 +1,21 @@
+<!-- inside your checkout.html -->
+<form id="checkoutForm" onsubmit="event.preventDefault(); placeOrder();">
+  <input id="billingName" class="form-control" required placeholder="Full name">
+  <input id="billingPhone" class="form-control mt-2" required placeholder="Phone">
+  <input id="billingAddress" class="form-control mt-2" required placeholder="Address">
+  <button type="submit" class="btn btn-warning mt-3 w-100">Place Order</button>
+</form>
+
+<script src="assets/js/main.js"></script>
+<script src="assets/js/cart.js"></script>
+<script>
+  function placeOrder() {
+    const billing = {
+      name: document.getElementById('billingName').value.trim(),
+      phone: document.getElementById('billingPhone').value.trim(),
+      address: document.getElementById('billingAddress').value.trim()
+    };
+    // In production: validate & process payment, then call checkoutCart with server confirmation
+    window.checkoutCart(billing);
+  }
+</script>

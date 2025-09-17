@@ -1,0 +1,52 @@
+payal-minal-jewellers/
+│── index.html                # Home Page
+│── about.html                # About Us Page
+│── contact.html              # Contact Page
+│── login.html                # Login Page
+│── register.html             # Registration Page
+│── forgot-password.html      # Password Reset Page
+│── product-explorer.html     # Jewellery product catalog
+│── product-detail.html       # Individual product page with 3D model viewer
+│── cart.html                 # Shopping cart page
+│── checkout.html             # Checkout page
+│── order-confirmation.html   # Order confirmation page
+│── order-tracking.html       # Order tracking timeline
+│── diamonds.html             # Detailed diamond information
+│── gold.html                 # Detailed gold information
+│── jewellery-process.html    # Jewellery making process page
+│
+├── 📂 assets/
+│   ├── 📂 css/
+│   │    ├── style.css        # Custom styles
+│   │    ├── responsive.css   # Media queries
+│   │
+│   ├── 📂 js/
+│   │    ├── main.js          # Core scripts
+│   │    ├── cart.js          # Cart & checkout logic
+│   │    ├── auth.js          # Login/register logic
+│   │
+│   ├── 📂 images/
+│   │    ├── hero/            # Hero background images
+│   │    ├── products/        # Product images
+│   │    ├── diamonds/        # Diamond shapes/cuts
+│   │    ├── gold/            # Gold types/colors
+│   │    ├── process/         # Jewellery making process flow images
+│   │
+│   ├── 📂 models/
+│   │    ├── rings/           # 3D model files (GLTF/OBJ)
+│   │    ├── necklaces/
+│   │    ├── bangles/
+│
+├── 📂 components/
+│   ├── header.html           # Navigation bar
+│   ├── footer.html           # Footer
+│   ├── hero.html             # Hero section with multi-image preview
+│   ├── product-card.html     # Reusable product card
+│   ├── category-card.html    # Category display
+│   ├── order-timeline.html   # Order tracking steps
+│
+└── 📂 admin/                 # Basic admin panel
+    ├── dashboard.html
+    ├── manage-products.html
+    ├── manage-orders.html
+    ├── manage-users.html

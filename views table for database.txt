@@ -1,0 +1,499 @@
+-- =========================
+-- Humanized Views
+-- =========================
+
+-- 1) Product catalog (detailed)
+CREATE OR REPLACE VIEW v_product_catalog AS
+SELECT
+  p.product_id,
+  p.sku,
+  p.name AS product_name,
+  p.description,
+  p.price,
+  p.stock,
+  p.material,
+  p.weight,
+  p.color,
+  p.making_process,
+  p.image_url,
+  p.is_active,
+  p.is_discontinued,
+  c.category_id,
+  c.name AS category_name,
+  comp.company_id,
+  comp.name AS company_name,
+  p.created_at
+FROM products p
+LEFT JOIN categories c ON p.category_id = c.category_id
+LEFT JOIN companies comp ON p.company_id = comp.company_id;
+
+-- 2) Order summary (one row per order)
+CREATE OR REPLACE VIEW v_order_summary AS
+SELECT
+  o.order_id,
+  o.user_id,
+  CONCAT(u.first_name, ' ', u.last_name) AS customer_name,
+  u.email AS customer_email,
+  o.company_id,
+  comp.name AS company_name,
+  o.total_amount,
+  o.status AS order_status,
+  o.payment_status,
+  o.shipping_address,
+  o.created_at AS order_date
+FROM orders o
+LEFT JOIN users u ON o.user_id = u.user_id
+LEFT JOIN companies comp ON o.company_id = comp.company_id;
+
+-- 3) Order details (one row per order_item with order-level info)
+CREATE OR REPLACE VIEW v_order_details AS
+SELECT
+  o.order_id,
+  o.created_at AS order_date,
+  o.status AS order_status,
+  o.payment_status,
+  o.total_amount AS order_total,
+  oi.order_item_id,
+  oi.product_id,
+  p.name AS product_name,
+  oi.quantity,
+  oi.price AS unit_price,
+  (oi.quantity * oi.price) AS line_total,
+  ot.tracking_id,
+  ot.status AS tracking_status,
+  ot.updated_at AS tracking_updated_at
+FROM orders o
+JOIN order_items oi ON o.order_id = oi.order_id
+LEFT JOIN products p ON oi.product_id = p.product_id
+LEFT JOIN order_tracking ot ON o.order_id = ot.order_id;
+
+-- 4) Cart summary (one row per cart_item with user info)
+CREATE OR REPLACE VIEW v_cart_summary AS
+SELECT
+  c.cart_id,
+  c.user_id,
+  CONCAT(u.first_name,' ',u.last_name) AS customer_name,
+  u.email AS customer_email,
+  ci.cart_item_id,
+  ci.product_id,
+  p.name AS product_name,
+  ci.quantity,
+  ci.price,
+  (ci.quantity * ci.price) AS line_total,
+  c.created_at AS cart_created_at
+FROM cart_items ci
+JOIN cart c ON ci.cart_id = c.cart_id
+LEFT JOIN users u ON c.user_id = u.user_id
+LEFT JOIN products p ON ci.product_id = p.product_id;
+
+-- 5) Customer profile (aggregated)
+CREATE OR REPLACE VIEW v_customer_profile AS
+SELECT
+  u.user_id,
+  CONCAT(u.first_name, ' ', u.last_name) AS customer_name,
+  u.email,
+  u.phone,
+  COALESCE(COUNT(DISTINCT o.order_id),0) AS total_orders,
+  COALESCE(SUM(o.total_amount),0) AS total_spent,
+  MAX(o.created_at) AS last_order_date,
+  u.created_at AS signup_date
+FROM users u
+LEFT JOIN orders o ON u.user_id = o.user_id
+GROUP BY u.user_id;
+
+-- 6) Product reviews humanized
+CREATE OR REPLACE VIEW v_product_reviews AS
+SELECT
+  r.review_id,
+  r.product_id,
+  p.name AS product_name,
+  r.user_id,
+  CONCAT(u.first_name,' ',u.last_name) AS reviewer_name,
+  r.rating,
+  r.title,
+  r.comment,
+  r.created_at
+FROM reviews r
+LEFT JOIN users u ON r.user_id = u.user_id
+LEFT JOIN products p ON r.product_id = p.product_id;
+
+-- 7) Product ratings summary
+CREATE OR REPLACE VIEW v_product_ratings AS
+SELECT
+  p.product_id,
+  p.name AS product_name,
+  ROUND(AVG(r.rating),2) AS avg_rating,
+  COUNT(r.review_id) AS total_reviews
+FROM products p
+LEFT JOIN reviews r ON p.product_id = r.product_id
+GROUP BY p.product_id, p.name;
+
+-- 8) Sales by category & company (aggregated)
+CREATE OR REPLACE VIEW v_sales_by_category AS
+SELECT
+  comp.company_id,
+  comp.name AS company_name,
+  c.category_id,
+  c.name AS category_name,
+  SUM(oi.quantity * oi.price) AS total_revenue,
+  SUM(oi.quantity) AS total_units_sold,
+  COUNT(DISTINCT oi.order_id) AS total_orders
+FROM order_items oi
+JOIN products p ON oi.product_id = p.product_id
+LEFT JOIN categories c ON p.category_id = c.category_id
+LEFT JOIN companies comp ON p.company_id = comp.company_id
+JOIN orders o ON oi.order_id = o.order_id
+WHERE o.status IN ('placed','processing','shipped','delivered')
+GROUP BY comp.company_id, c.category_id;
+
+-- 9) Payments summary (one row per payment)
+CREATE OR REPLACE VIEW v_payments_summary AS
+SELECT
+  pay.payment_id,
+  pay.order_id,
+  pay.amount,
+  pay.method,
+  pay.reference,
+  pay.status AS payment_status,
+  pay.created_at AS payment_date,
+  o.user_id,
+  CONCAT(u.first_name,' ',u.last_name) AS customer_name,
+  o.total_amount AS order_total
+FROM payments pay
+LEFT JOIN orders o ON pay.order_id = o.order_id
+LEFT JOIN users u ON o.user_id = u.user_id;
+
+-- 10) Refunds summary
+CREATE OR REPLACE VIEW v_refunds_summary AS
+SELECT
+  r.refund_id,
+  r.order_id,
+  r.payment_id,
+  r.amount,
+  r.status AS refund_status,
+  r.reference,
+  r.reason,
+  r.created_at AS refund_date,
+  o.user_id,
+  CONCAT(u.first_name,' ',u.last_name) AS customer_name
+FROM refunds r
+LEFT JOIN orders o ON r.order_id = o.order_id
+LEFT JOIN users u ON o.user_id = u.user_id;
+
+-- 11) Inventory valuation detail
+CREATE OR REPLACE VIEW v_inventory_valuation AS
+SELECT
+  p.product_id,
+  p.sku,
+  p.name AS product_name,
+  p.company_id,
+  comp.name AS company_name,
+  p.category_id,
+  cat.name AS category_name,
+  p.stock,
+  p.price,
+  p.stock * p.price AS valuation_estimate
+FROM products p
+LEFT JOIN companies comp ON p.company_id = comp.company_id
+LEFT JOIN categories cat ON p.category_id = cat.category_id;
+
+-- 12) Top customers (by spend)
+CREATE OR REPLACE VIEW v_top_customers AS
+SELECT
+  u.user_id,
+  CONCAT(u.first_name,' ',u.last_name) AS customer_name,
+  u.email,
+  COALESCE(SUM(o.total_amount),0) AS total_spent,
+  COUNT(DISTINCT o.order_id) AS orders_count
+FROM users u
+LEFT JOIN orders o ON u.user_id = o.user_id AND o.status IN ('placed','processing','shipped','delivered')
+GROUP BY u.user_id
+ORDER BY total_spent DESC;
+
+-- =========================
+-- Stored procedures for paging / filtering / search on views
+-- (All follow: calculate v_limit, v_offset first, then query)
+-- =========================
+
+-- PRODUCTS: list/search/filter/paginate
+DROP PROCEDURE IF EXISTS sp_get_products_view;
+DELIMITER //
+CREATE PROCEDURE sp_get_products_view(
+  IN p_company_id INT,
+  IN p_category_id INT,
+  IN p_search_term VARCHAR(255),
+  IN p_min_price DECIMAL(12,2),
+  IN p_max_price DECIMAL(12,2),
+  IN p_page INT,
+  IN p_page_size INT,
+  IN p_sort_by VARCHAR(50)
+)
+BEGIN
+  DECLARE v_offset INT;
+  DECLARE v_limit INT;
+  SET v_limit = IFNULL(p_page_size, 20);
+  IF v_limit < 1 THEN SET v_limit = 20; END IF;
+  SET v_offset = (GREATEST(IFNULL(p_page,1),1) - 1) * v_limit;
+
+  SELECT SQL_CALC_FOUND_ROWS *
+  FROM v_product_catalog
+  WHERE (company_id = p_company_id OR p_company_id IS NULL)
+    AND (category_id = p_category_id OR p_category_id IS NULL)
+    AND (price >= COALESCE(p_min_price, 0))
+    AND (price <= COALESCE(p_max_price, 999999999))
+    AND ( (p_search_term IS NULL OR p_search_term = '')
+          OR (product_name LIKE CONCAT('%', p_search_term, '%'))
+          OR (description LIKE CONCAT('%', p_search_term, '%')) )
+    AND is_active = 1 AND is_discontinued = 0
+  ORDER BY
+    CASE WHEN p_sort_by = 'price_asc' THEN price END ASC,
+    CASE WHEN p_sort_by = 'price_desc' THEN price END DESC,
+    CASE WHEN p_sort_by = 'newest' THEN created_at END DESC
+  LIMIT v_limit OFFSET v_offset;
+END //
+DELIMITER ;
+
+-- ORDERS: list / filter / paginate
+DROP PROCEDURE IF EXISTS sp_get_orders_view;
+DELIMITER //
+CREATE PROCEDURE sp_get_orders_view(
+  IN p_company_id INT,
+  IN p_user_id INT,
+  IN p_status VARCHAR(50),
+  IN p_from_date DATE,
+  IN p_to_date DATE,
+  IN p_page INT,
+  IN p_page_size INT
+)
+BEGIN
+  DECLARE v_offset INT;
+  DECLARE v_limit INT;
+  SET v_limit = IFNULL(p_page_size, 20);
+  IF v_limit < 1 THEN SET v_limit = 20; END IF;
+  SET v_offset = (GREATEST(IFNULL(p_page,1),1) - 1) * v_limit;
+
+  SELECT SQL_CALC_FOUND_ROWS *
+  FROM v_order_summary
+  WHERE (company_id = p_company_id OR p_company_id IS NULL)
+    AND (user_id = p_user_id OR p_user_id IS NULL)
+    AND (p_status IS NULL OR p_status = '' OR order_status = p_status)
+    AND (order_date BETWEEN COALESCE(p_from_date, '1970-01-01') AND COALESCE(p_to_date, NOW()))
+  ORDER BY order_date DESC
+  LIMIT v_limit OFFSET v_offset;
+END //
+DELIMITER ;
+
+-- ORDER DETAILS: get items + tracking for a single order (no paging)
+DROP PROCEDURE IF EXISTS sp_get_order_details;
+DELIMITER //
+CREATE PROCEDURE sp_get_order_details(
+  IN p_order_id INT
+)
+BEGIN
+  SELECT * FROM v_order_details WHERE order_id = p_order_id ORDER BY order_date DESC;
+END //
+DELIMITER ;
+
+-- CART: get cart contents for user
+DROP PROCEDURE IF EXISTS sp_get_cart_for_user;
+DELIMITER //
+CREATE PROCEDURE sp_get_cart_for_user(IN p_user_id INT)
+BEGIN
+  SELECT * FROM v_cart_summary WHERE user_id = p_user_id ORDER BY cart_created_at DESC;
+END //
+DELIMITER ;
+
+-- CUSTOMERS: search / paginate
+DROP PROCEDURE IF EXISTS sp_search_customers;
+DELIMITER //
+CREATE PROCEDURE sp_search_customers(
+  IN p_search_term VARCHAR(255),
+  IN p_page INT,
+  IN p_page_size INT
+)
+BEGIN
+  DECLARE v_offset INT; DECLARE v_limit INT;
+  SET v_limit = IFNULL(p_page_size, 20); IF v_limit < 1 THEN SET v_limit = 20; END IF;
+  SET v_offset = (GREATEST(IFNULL(p_page,1),1) - 1) * v_limit;
+
+  SELECT SQL_CALC_FOUND_ROWS * FROM v_customer_profile
+  WHERE (p_search_term IS NULL OR p_search_term = '')
+    OR (customer_name LIKE CONCAT('%', p_search_term, '%'))
+    OR (email LIKE CONCAT('%', p_search_term, '%'))
+  ORDER BY total_spent DESC
+  LIMIT v_limit OFFSET v_offset;
+END //
+DELIMITER ;
+
+-- REVIEWS: list for product (paginate & sort)
+DROP PROCEDURE IF EXISTS sp_get_reviews_for_product;
+DELIMITER //
+CREATE PROCEDURE sp_get_reviews_for_product(
+  IN p_product_id INT,
+  IN p_page INT,
+  IN p_page_size INT,
+  IN p_sort_by VARCHAR(50)  -- 'newest' or 'rating_desc'
+)
+BEGIN
+  DECLARE v_offset INT; DECLARE v_limit INT;
+  SET v_limit = IFNULL(p_page_size, 20); IF v_limit < 1 THEN SET v_limit = 20; END IF;
+  SET v_offset = (GREATEST(IFNULL(p_page,1),1) - 1) * v_limit;
+
+  SELECT * FROM v_product_reviews
+  WHERE product_id = p_product_id
+  ORDER BY
+    CASE WHEN p_sort_by = 'rating_desc' THEN rating END DESC,
+    CASE WHEN p_sort_by = 'newest' THEN created_at END DESC
+  LIMIT v_limit OFFSET v_offset;
+END //
+DELIMITER ;
+
+-- PAYMENTS: list / filter
+DROP PROCEDURE IF EXISTS sp_get_payments;
+DELIMITER //
+CREATE PROCEDURE sp_get_payments(
+  IN p_order_id INT,
+  IN p_status VARCHAR(50),
+  IN p_from_date DATE,
+  IN p_to_date DATE,
+  IN p_page INT,
+  IN p_page_size INT
+)
+BEGIN
+  DECLARE v_offset INT; DECLARE v_limit INT;
+  SET v_limit = IFNULL(p_page_size, 20); IF v_limit < 1 THEN SET v_limit = 20; END IF;
+  SET v_offset = (GREATEST(IFNULL(p_page,1),1) - 1) * v_limit;
+
+  SELECT * FROM v_payments_summary
+  WHERE (order_id = p_order_id OR p_order_id IS NULL)
+    AND (p_status IS NULL OR p_status = '' OR payment_status = p_status)
+    AND (payment_date BETWEEN COALESCE(p_from_date, '1970-01-01') AND COALESCE(p_to_date, NOW()))
+  ORDER BY payment_date DESC
+  LIMIT v_limit OFFSET v_offset;
+END //
+DELIMITER ;
+
+-- REFUNDS: list / filter
+DROP PROCEDURE IF EXISTS sp_get_refunds;
+DELIMITER //
+CREATE PROCEDURE sp_get_refunds(
+  IN p_order_id INT,
+  IN p_status VARCHAR(50),
+  IN p_from_date DATE,
+  IN p_to_date DATE,
+  IN p_page INT,
+  IN p_page_size INT
+)
+BEGIN
+  DECLARE v_offset INT; DECLARE v_limit INT;
+  SET v_limit = IFNULL(p_page_size, 20); IF v_limit < 1 THEN SET v_limit = 20; END IF;
+  SET v_offset = (GREATEST(IFNULL(p_page,1),1) - 1) * v_limit;
+
+  SELECT * FROM v_refunds_summary
+  WHERE (order_id = p_order_id OR p_order_id IS NULL)
+    AND (p_status IS NULL OR p_status = '' OR refund_status = p_status)
+    AND (refund_date BETWEEN COALESCE(p_from_date, '1970-01-01') AND COALESCE(p_to_date, NOW()))
+  ORDER BY refund_date DESC
+  LIMIT v_limit OFFSET v_offset;
+END //
+DELIMITER ;
+
+-- INVENTORY: list low stock / valuation with paging
+DROP PROCEDURE IF EXISTS sp_get_inventory;
+DELIMITER //
+CREATE PROCEDURE sp_get_inventory(
+  IN p_company_id INT,
+  IN p_threshold INT,
+  IN p_page INT,
+  IN p_page_size INT,
+  IN p_sort_by VARCHAR(50)
+)
+BEGIN
+  DECLARE v_offset INT; DECLARE v_limit INT;
+  SET v_limit = IFNULL(p_page_size, 20); IF v_limit < 1 THEN SET v_limit = 20; END IF;
+  SET v_offset = (GREATEST(IFNULL(p_page,1),1) - 1) * v_limit;
+
+  SELECT * FROM v_inventory_valuation
+  WHERE (company_id = p_company_id OR p_company_id IS NULL)
+    AND (p_threshold IS NULL OR stock <= p_threshold)
+  ORDER BY
+    CASE WHEN p_sort_by = 'valuation_desc' THEN valuation_estimate END DESC,
+    CASE WHEN p_sort_by = 'stock_asc' THEN stock END ASC
+  LIMIT v_limit OFFSET v_offset;
+END //
+DELIMITER ;
+
+-- SALES REPORT: flexible sales report by date/company/category with pagination
+DROP PROCEDURE IF EXISTS sp_sales_report_flex;
+DELIMITER //
+CREATE PROCEDURE sp_sales_report_flex(
+  IN p_from_date DATE,
+  IN p_to_date DATE,
+  IN p_company_id INT,
+  IN p_category_id INT,
+  IN p_page INT,
+  IN p_page_size INT
+)
+BEGIN
+  DECLARE v_offset INT; DECLARE v_limit INT;
+  SET v_limit = IFNULL(p_page_size, 50); IF v_limit < 1 THEN SET v_limit = 50; END IF;
+  SET v_offset = (GREATEST(IFNULL(p_page,1),1) - 1) * v_limit;
+
+  SELECT
+    comp.company_id,
+    comp.name AS company_name,
+    c.category_id,
+    c.name AS category_name,
+    SUM(oi.quantity * oi.price) AS total_revenue,
+    SUM(oi.quantity) AS units_sold,
+    COUNT(DISTINCT oi.order_id) AS orders_count
+  FROM order_items oi
+  JOIN orders o ON oi.order_id = o.order_id
+  JOIN products p ON oi.product_id = p.product_id
+  LEFT JOIN categories c ON p.category_id = c.category_id
+  LEFT JOIN companies comp ON p.company_id = comp.company_id
+  WHERE (o.created_at BETWEEN COALESCE(p_from_date, '1970-01-01') AND COALESCE(p_to_date, NOW()))
+    AND (comp.company_id = p_company_id OR p_company_id IS NULL)
+    AND (c.category_id = p_category_id OR p_category_id IS NULL)
+    AND o.status IN ('placed','processing','shipped','delivered')
+  GROUP BY comp.company_id, c.category_id
+  ORDER BY total_revenue DESC
+  LIMIT v_limit OFFSET v_offset;
+END //
+DELIMITER ;
+
+-- TOP CUSTOMERS: paging
+DROP PROCEDURE IF EXISTS sp_top_customers;
+DELIMITER //
+CREATE PROCEDURE sp_top_customers(IN p_page INT, IN p_page_size INT)
+BEGIN
+  DECLARE v_offset INT; DECLARE v_limit INT;
+  SET v_limit = IFNULL(p_page_size, 50); IF v_limit < 1 THEN SET v_limit = 50; END IF;
+  SET v_offset = (GREATEST(IFNULL(p_page,1),1) - 1) * v_limit;
+
+  SELECT user_id, customer_name, email, total_spent, orders_count
+  FROM v_top_customers
+  LIMIT v_limit OFFSET v_offset;
+END //
+DELIMITER ;
+
+-- TOP PRODUCTS: paging (based on units sold)
+DROP PROCEDURE IF EXISTS sp_top_products;
+DELIMITER //
+CREATE PROCEDURE sp_top_products(IN p_limit INT)
+BEGIN
+  DECLARE v_limit INT;
+  SET v_limit = IFNULL(p_limit, 10);
+  IF v_limit < 1 THEN SET v_limit = 10; END IF;
+
+  SELECT p.product_id, p.product_name, COALESCE(SUM(oi.quantity),0) AS units_sold, COALESCE(SUM(oi.quantity * oi.price),0) AS revenue_generated
+  FROM v_product_catalog p
+  LEFT JOIN order_items oi ON p.product_id = oi.product_id
+  LEFT JOIN orders o ON oi.order_id = o.order_id AND o.status IN ('placed','processing','shipped','delivered')
+  GROUP BY p.product_id, p.product_name
+  ORDER BY units_sold DESC
+  LIMIT v_limit;
+END //
+DELIMITER ;
+
+-- END of views + procedures
