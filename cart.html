@@ -1,66 +1,232 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cart | Payal & Minal Jewellers</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cart — Payal & Minal Gems</title>
+
+  <!-- Bootstrap 5.3 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <style>
-    body { background-color: #fafafa; }
-    .cart-item { border-bottom: 1px solid #eee; padding: 15px 0; }
+    :root{
+      --primary-pink:#FF1493;
+      --luxury-gold:#FFD700;
+      --deep-black:#111827;
+      --charcoal:#4b5563;
+      --nav-bg: rgba(255,255,255,0.82);
+      --brand-gradient: linear-gradient(90deg,var(--primary-pink),var(--luxury-gold));
+      --font-heading:'Playfair Display', serif;
+      --font-body:'Poppins', sans-serif;
+    }
+    body{ font-family:var(--font-body); color:var(--charcoal); background:#fff; margin:0; padding-top:72px; }
+    h1,h2,h3{ font-family:var(--font-heading); color:var(--deep-black); }
+    .navbar{ background:var(--nav-bg); backdrop-filter: blur(6px); border-bottom:1px solid rgba(0,0,0,0.04); }
+
+    .cart-item { border-bottom: 1px solid #eee; padding: 16px 0; }
+    .cart-item { border-bottom: 1px solid #eee; padding: 16px 0; }
     .cart-total { background: #fff8e1; border-radius: 10px; padding: 20px; }
-    .btn-gold { background-color: #b88a44; color: #fff; }
-    .btn-gold:hover { background-color: #a0783c; }
+    .btn-gold { background-color: #b88a44; color: #fff; border: none; }
+    .btn-gold:hover { background-color: #a0783c; color: #fff; }
+
+    @media (max-width: 768px){
+      .cart-total { margin-top: 18px; }
+    }
   </style>
 </head>
 <body>
-  <div class="container py-5">
+
+  <!-- NAV -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="assets/images/logo_minalgems.png" alt="Payal & Minal Gems Logo" style="height:56px;">
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="products.html">Shop</a></li>
+          <li class="nav-item ms-2 d-none d-lg-block">
+            <a class="btn btn-outline-dark btn-sm" href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+          </li>
+          <li class="nav-item ms-2 d-none d-lg-block">
+            <a class="btn btn-sm btn-primary" href="login.html">Login</a>
+          </li>
+          <li class="nav-item ms-2 d-flex align-items-center">
+            <button class="btn btn-outline-dark btn-sm me-2" onclick="goHome()">Home</button>
+            <button class="btn btn-outline-dark btn-sm" onclick="goBack()">Back</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="container py-4">
     <h2 class="mb-4">Your Shopping Cart</h2>
+
     <div class="row">
-      <div class="col-md-8">
-        <!-- Item 1 -->
-        <div class="cart-item d-flex justify-content-between align-items-center">
-          <div class="d-flex align-items-center">
-            <img src="https://images.unsplash.com/photo-1600180758895-6fc33896c3a7" class="img-thumbnail" width="80">
-            <div class="ms-3">
-              <h5>Diamond Ring</h5>
-              <p class="mb-1">18K White Gold | Round Brilliant Diamond</p>
-              <p class="fw-bold">₹45,000</p>
+      <div class="col-lg-8">
+        <div id="items-list" class="card p-3">
+          <!-- Items are injected by JS; sample fallback shown below -->
+          <div class="cart-item d-flex justify-content-between align-items-center" data-id="ring1" data-price="75000">
+            <div class="d-flex align-items-center">
+              <img src="assets/images/products/ring_thumb.jpg" class="img-thumbnail" width="80" alt="Ring">
+              <div class="ms-3">
+                <h5 class="mb-0">Classic Round Diamond Ring</h5>
+                <div class="small text-muted">18K White Gold</div>
+                <div class="fw-bold mt-1">₹75,000</div>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center">
+              <button class="btn btn-light me-2" onclick="changeQty(this, -1)">−</button>
+              <input type="number" value="1" min="0" class="form-control text-center qty-input" style="width:80px" onchange="recalcCart()" />
+              <button class="btn btn-light ms-2" onclick="changeQty(this, +1)">+</button>
+              <button class="btn btn-link text-danger ms-3" onclick="removeItem(this)" title="Remove">Remove</button>
             </div>
           </div>
-          <div>
-            <input type="number" value="1" min="1" class="form-control" style="width: 70px;">
-          </div>
-        </div>
-        <!-- Item 2 -->
-        <div class="cart-item d-flex justify-content-between align-items-center">
-          <div class="d-flex align-items-center">
-            <img src="https://images.unsplash.com/photo-1603808033192-518c10ff32e7" class="img-thumbnail" width="80">
-            <div class="ms-3">
-              <h5>Gold Necklace</h5>
-              <p class="mb-1">22K Yellow Gold</p>
-              <p class="fw-bold">₹75,000</p>
-            </div>
-          </div>
-          <div>
-            <input type="number" value="1" min="1" class="form-control" style="width: 70px;">
-          </div>
+
+          <!-- Add more item blocks dynamically or duplicate above block in HTML if you prefer static content -->
         </div>
       </div>
-      <div class="col-md-4">
+
+      <div class="col-lg-4">
         <div class="cart-total shadow-sm">
           <h5>Order Summary</h5>
-          <p>Subtotal: <strong>₹1,20,000</strong></p>
-          <p>Taxes: <strong>₹6,000</strong></p>
-          <h5>Total: ₹1,26,000</h5>
-          <a href="order.html" class="btn btn-gold w-100 mt-3">Proceed to Checkout</a>
+          <hr>
+          <div class="d-flex justify-content-between mb-2">
+            <div>Items</div>
+            <div id="summary-items">1</div>
+          </div>
+
+          <div class="d-flex justify-content-between mb-2">
+            <div>Subtotal</div>
+            <div id="summary-subtotal">₹0</div>
+          </div>
+
+          <div class="d-flex justify-content-between mb-2">
+            <div>Taxes (GST)</div>
+            <div id="summary-taxes">₹0</div>
+          </div>
+
+          <hr>
+
+          <div class="d-flex justify-content-between mb-3">
+            <h5>Total</h5>
+            <h5 id="summary-total">₹0</h5>
+          </div>
+
+          <a href="order.html" class="btn btn-gold w-100">Proceed to Checkout</a>
         </div>
       </div>
     </div>
-  </div>
-</body>
-<!-- in footer / before </body> -->
-<script src="assets/js/main.js"></script>
-<script src="assets/js/cart.js"></script>
+  </main>
 
+  <!-- Footer (same as index) -->
+  <footer>
+    <div class="container">
+      <div class="row gy-3 py-3">
+        <div class="col-md-4">
+          <img src="assets/images/logo_minalgems.png" alt="logo" style="height:56px;">
+          
+          <p class="mt-2 small muted-small">Jewellery for all occasions. Certified diamonds, premium gold, reliable service.</p>
+        </div>
+        <div class="col-md-4">
+          <h6 class="mb-2">Quick Links</h6>
+          <ul class="list-unstyled small">
+            <li><a href="products.html">Shop</a></li>
+            <li><a href="process.html">Process</a></li>
+            <li><a href="diamonds.html">Diamonds</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h6 class="mb-2">Contact</h6>
+          <p class="small mb-0">33, Sant Tukaram Society-2, Surat</p>
+          <p class="small mb-0">+91 70697 85900</p>
+          <p class="small"><a href="mailto:khatrip.009@gmail.com">khatrip.009@gmail.com</a></p>
+        </div>
+      </div>
+      <hr />
+      <div class="text-center small">&copy; 2025 Payal & Minal Gems. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Shared navigation helpers
+    function goHome(){ window.location.href='index.html'; }
+    function goBack(){
+      if (document.referrer && document.referrer !== window.location.href) { history.back(); return; }
+      if (history.length > 1) { history.back(); return; }
+      window.location.href = 'index.html';
+    }
+
+    // Cart storage (same key across pages)
+    const CART_KEY = 'minalgems_cart_v1';
+    function getCart(){ try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch(e){ return []; } }
+    function saveCart(arr){ try { localStorage.setItem(CART_KEY, JSON.stringify(arr)); } catch(e){} }
+
+    function updateCartCount(){
+      const el = document.getElementById('cart-count'); if(el) el.innerText = getCart().length;
+    }
+
+    // Utilities for cart page: quantity change, calc, remove
+    function changeQty(btn, delta){
+      const input = btn.parentElement.querySelector('input[type="number"]');
+      let v = parseInt(input.value || '0', 10);
+      v = Math.max(0, v + delta);
+      input.value = v;
+      recalcCart();
+    }
+
+    function removeItem(btn){
+      const item = btn.closest('.cart-item');
+      if(!item) return;
+      item.remove();
+      recalcCart();
+    }
+
+    function recalcCart(){
+      const items = Array.from(document.querySelectorAll('.cart-item'));
+      let subtotal = 0, count = 0;
+      items.forEach(it => {
+        const price = parseFloat(it.getAttribute('data-price') || '0');
+        const qty = parseInt(it.querySelector('input[type="number"]').value || '0', 10);
+        subtotal += price * qty;
+        count += qty;
+      });
+
+      const taxRate = 0.05;
+      const taxes = Math.round(subtotal * taxRate);
+      const total = subtotal + taxes;
+
+      const fmt = n => new Intl.NumberFormat('en-IN', { style:'currency', currency:'INR', maximumFractionDigits:0}).format(n);
+
+      document.getElementById('summary-items').textContent = count;
+      document.getElementById('summary-subtotal').textContent = fmt(subtotal);
+      document.getElementById('summary-taxes').textContent = fmt(taxes);
+      document.getElementById('summary-total').textContent = fmt(total);
+
+      // Sync with cart-count (basic: number of distinct items)
+      document.getElementById('cart-count').innerText = document.querySelectorAll('.cart-item').length;
+    }
+
+    // init
+    document.addEventListener('DOMContentLoaded', function(){
+      updateCartCount();
+      recalcCart();
+    });
+  </script>
+</body>
 </html>

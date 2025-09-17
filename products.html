@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Products — Payal & Minal Gems</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons & Font (optional icons) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --primary-pink:#FF1493;
+      --luxury-gold:#FFD700;
+      --deep-black:#111827;
+      --charcoal:#4b5563;
+      --nav-bg: rgba(255,255,255,0.92);
+      --brand-gradient: linear-gradient(90deg,var(--primary-pink),var(--luxury-gold));
+      --font-heading:'Playfair Display', serif;
+      --font-body:'Poppins', sans-serif;
+      --card-radius:12px;
+    }
+
+    html,body{height:100%;}
+    body{
+      font-family:var(--font-body);
+      color:var(--charcoal);
+      background:#f7f6fb;
+      margin:0;
+      -webkit-font-smoothing:antialiased;
+    }
+    h1,h2,h3{ font-family:var(--font-heading); color:var(--deep-black); }
+
+    /* NAV */
+    .navbar{
+      background: var(--nav-bg);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      padding: .6rem 0;
+    }
+    .navbar-brand img{ height:56px; object-fit:contain; }
+    .nav-link{ color:var(--charcoal) !important; font-weight:500; }
+    .btn-primary { background:var(--primary-pink); border:none; }
+    .btn-primary:hover { background-image: var(--brand-gradient); color:#111; }
+
+    /* Page layout */
+    .page-wrap { padding: 28px 16px; max-width: 1200px; margin: 0 auto; }
+    .panel { background: #fff; border-radius: var(--card-radius); box-shadow: 0 8px 30px rgba(16,24,40,0.06); padding: 18px; }
+
+    /* Header/filter bar */
+    #header-bar { display:flex; gap:12px; align-items:center; padding: 12px; }
+    #filter-toggle { background:#ff935d; color:#fff; padding:8px 18px; border-radius:6px; border:none; }
+    select.form-select-sm { width: 170px; }
+
+    /* Sidebar filters */
+    .filters { width: 280px; }
+    .filters .box { background:#fff; border-radius:10px; padding:14px; margin-bottom:14px; border:1px solid #eee; }
+    .box-label { font-weight:700; color:#11698e; font-size:.95rem; display:flex; align-items:center; justify-content:space-between; }
+    .tick { display:block; position:relative; padding-left:24px; margin:8px 0; cursor:pointer; font-size:.95rem; }
+    .tick input { position:absolute; opacity:0; width:0; height:0; }
+    .check { position:absolute; left:0; top:0; width:18px; height:18px; border:1px solid #ddd; background:#fff; border-radius:4px; }
+    .tick input:checked + .check::after { content:''; position:absolute; left:6px; top:2px; width:5px; height:10px; border: solid #000; border-width:0 3px 3px 0; transform:rotate(45deg); }
+
+    /* Range slider */
+    .multi-range { position:relative; padding:18px 8px; }
+    .multi-range .track { height:6px; background:#e6e6e6; border-radius:4px; position:relative; }
+    .multi-range .range { position:absolute; height:6px; background:#36a31b; border-radius:4px; left:20%; right:25%; top:0; }
+    .multi-range input[type=range] { -webkit-appearance:none; appearance:none; width:100%; position:absolute; left:0; top:-7px; height:20px; background:transparent; pointer-events: all; }
+    .multi-range .thumb { width:18px; height:18px; border-radius:50%; background:#36a31b; position:absolute; top:-6px; transform:translateX(-50%); }
+
+    /* Product grid */
+    .product-card { border-radius:12px; overflow:hidden; background:#fff; padding:0; border:1px solid rgba(0,0,0,0.03); transition: transform .22s, box-shadow .22s; display:flex; flex-direction:column; height:100%; }
+    .product-card:hover { transform:translateY(-6px); box-shadow:0 16px 40px rgba(16,24,40,0.08); }
+    .product-img { height:210px; display:flex; align-items:center; justify-content:center; background:#fafafa; }
+    .product-img img{ max-width:100%; max-height:180px; object-fit:contain; }
+    .product-body { padding:14px; flex:1; display:flex; flex-direction:column; }
+    .product-title{ font-weight:600; font-size:1rem; margin-bottom:.35rem; }
+    .product-meta{ color:#6b7280; font-size:.92rem; margin-bottom:.6rem; }
+    .price-wrap{ display:flex; align-items:baseline; gap:8px; margin-top:auto; }
+    .price-old{ text-decoration:line-through; color:#ef4444; font-size:.95rem; }
+    .price-now{ font-weight:700; font-size:1.06rem; }
+
+    /* utility */
+    .muted-small{ color:#9ca3af; font-size:.92rem; }
+    .pagination { margin:0; }
+
+    /* responsive */
+    @media(max-width: 991px){
+      .filters { width:100%; margin-bottom:12px; }
+      .filters-collapse { display:block; }
+      #content-area { flex-direction:column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV (same theme) -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="assets/images/logo_minalgems.png" alt="Payal & Minal Gems Logo" />
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" aria-controls="navMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link active" href="products.html">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="diamonds.html">Diamonds</a></li>
+          <li class="nav-item"><a class="nav-link" href="gold.html">Gold</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+
+          <li class="nav-item ms-3 d-none d-lg-block">
+            <a class="btn btn-outline-dark btn-sm" href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+          </li>
+          <li class="nav-item ms-2 d-none d-lg-block">
+            <a class="btn btn-sm btn-primary" href="login.html">Login</a>
+          </li>
+
+          <li class="nav-item ms-2 d-flex align-items-center">
+            <button class="btn btn-outline-dark btn-sm me-2" onclick="goHome()">Home</button>
+            <button class="btn btn-outline-dark btn-sm" onclick="goBack()">Back</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE CONTENT -->
+  <div class="page-wrap">
+
+    <!-- header/filter bar -->
+    <div class="panel mb-3" id="header-bar">
+      <div class="d-flex align-items-center gap-2">
+        <button id="filter-toggle" class="btn" aria-expanded="true" aria-controls="filters-panel">
+          <i class="fas fa-filter me-2"></i><span id="filter-text">Hide filters</span>
+        </button>
+        <div class="ms-2 d-none d-md-block">
+          <label class="muted-small mb-0 me-2">Sort</label>
+          <select id="sort" class="form-select form-select-sm d-inline-block">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price — Low to High</option>
+            <option value="price-desc">Price — High to Low</option>
+            <option value="rating">Top Rated</option>
+          </select>
+        </div>
+        <div class="ms-3 d-none d-md-block">
+          <label class="muted-small mb-0 me-2">Show</label>
+          <select id="per-page" class="form-select form-select-sm d-inline-block">
+            <option>12</option>
+            <option>24</option>
+            <option>48</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <div class="muted-small d-none d-md-block">Showing <span id="results-count">12</span> of 120</div>
+
+        <nav aria-label="Pagination small">
+          <ul class="pagination pagination-sm mb-0">
+            <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">&lt;</a></li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">..</a></li>
+            <li class="page-item"><a class="page-link" href="#">10</a></li>
+            <li class="page-item"><a class="page-link" href="#">&gt;</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <!-- main: filters + products -->
+    <div id="content-area" class="d-flex gap-3">
+      <!-- Filters (collapsible on small screens) -->
+      <aside class="filters panel" id="filters-panel" aria-labelledby="filter-toggle">
+        <!-- Categories -->
+        <div class="box">
+          <div class="box-label">Categories</div>
+          <div class="mt-2">
+            <div class="form-check">
+              <input class="form-check-input cat-chk" type="checkbox" value="rings" id="cat-rings" checked>
+              <label class="form-check-label" for="cat-rings">Rings</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input cat-chk" type="checkbox" value="necklaces" id="cat-neck">
+              <label class="form-check-label" for="cat-neck">Necklaces</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input cat-chk" type="checkbox" value="braclets" id="cat-brace">
+              <label class="form-check-label" for="cat-brace">Bracelets</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input cat-chk" type="checkbox" value="daily" id="cat-daily" checked>
+              <label class="form-check-label" for="cat-daily">Daily Wear</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div class="box">
+          <div class="box-label">Price</div>
+          <div class="multi-range">
+            <div class="track"></div>
+            <div class="range" id="range-fill"></div>
+            <input type="range" id="input-left" min="0" max="200000" step="1000" value="10000">
+            <input type="range" id="input-right" min="0" max="200000" step="1000" value="100000">
+            <div class="d-flex justify-content-between mt-2">
+              <div><strong>Min</strong> <span id="amount-left">₹10,000</span></div>
+              <div><strong>Max</strong> <span id="amount-right">₹1,00,000</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Colors -->
+        <div class="box">
+          <div class="box-label">Colors</div>
+          <div class="mt-2 d-flex gap-2 flex-wrap">
+            <button class="btn color-btn" data-color="gold" style="background:#d4af37; width:34px; height:34px; border-radius:50%; border:1px solid #eee;"></button>
+            <button class="btn color-btn" data-color="silver" style="background:#cfcfcf; width:34px; height:34px; border-radius:50%;"></button>
+            <button class="btn color-btn active" data-color="rose" style="background:#f7b1c8; width:34px; height:34px; border-radius:50%;"></button>
+            <button class="btn color-btn" data-color="black" style="background:#222; width:34px; height:34px; border-radius:50%;"></button>
+          </div>
+        </div>
+
+        <!-- Sizes / Styles -->
+        <div class="box">
+          <div class="box-label">Styles</div>
+          <div class="mt-2 d-flex gap-2 flex-wrap">
+            <button class="btn btn-outline-secondary btn-sm style-btn" data-style="classic">Classic</button>
+            <button class="btn btn-outline-secondary btn-sm active style-btn" data-style="modern">Modern</button>
+            <button class="btn btn-outline-secondary btn-sm style-btn" data-style="bridal">Bridal</button>
+            <button class="btn btn-outline-secondary btn-sm style-btn" data-style="daily">Daily</button>
+          </div>
+        </div>
+
+        <!-- Apply / Reset -->
+        <div class="d-flex gap-2 mt-2">
+          <button class="btn btn-success w-50" id="apply-filters">Apply</button>
+          <button class="btn btn-outline-secondary w-50" id="reset-filters">Reset</button>
+        </div>
+      </aside>
+
+      <!-- Products area (grid) -->
+      <section class="flex-fill">
+        <div id="products-grid" class="row g-3">
+          <!-- Sample products — duplicate/replace with dynamic content -->
+          <!-- Card 1 -->
+          <div class="col-6 col-md-4 col-lg-3">
+            <article class="product-card h-100" data-category="rings" data-price="75000" data-color="gold" data-style="classic">
+              <div class="product-img">
+                <img src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=2b7a9daa1d8f0c3d7e1ef8a6cdb8b6f8" alt="Classic Round Diamond Ring">
+              </div>
+              <div class="product-body">
+                <div class="product-title">Classic Round Diamond Ring</div>
+                <div class="product-meta">18K White Gold</div>
+                <div class="price-wrap">
+                  <div class="price-old">₹85,000</div>
+                  <div class="price-now">₹75,000</div>
+                </div>
+                <div class="mt-3 d-flex justify-content-between align-items-center">
+                  <button class="btn btn-outline-dark btn-sm" onclick="openProduct('ring1')">View</button>
+                  <button class="btn btn-sm btn-primary" onclick="addToCart('ring1', 75000)">Add <i class="bi bi-cart-plus-fill ms-1"></i></button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="col-6 col-md-4 col-lg-3">
+            <article class="product-card h-100" data-category="necklaces" data-price="120000" data-color="rose" data-style="bridal">
+              <div class="product-img">
+                <img src="https://images.unsplash.com/photo-1543168256-418811576c3b?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=9b1b6b5ef5c6b2f11a5f2394e6b4b6c8" alt="Timeless Gold Necklace">
+              </div>
+              <div class="product-body">
+                <div class="product-title">Timeless Gold Necklace</div>
+                <div class="product-meta">22K Yellow Gold</div>
+                <div class="price-wrap">
+                  <div class="price-now">₹1,20,000</div>
+                </div>
+                <div class="mt-3 d-flex justify-content-between align-items-center">
+                  <button class="btn btn-outline-dark btn-sm" onclick="openProduct('neck1')">View</button>
+                  <button class="btn btn-sm btn-primary" onclick="addToCart('neck1', 120000)">Add <i class="bi bi-cart-plus-fill ms-1"></i></button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="col-6 col-md-4 col-lg-3">
+            <article class="product-card h-100" data-category="daily" data-price="1500" data-color="silver" data-style="daily">
+              <div class="product-img">
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=722b3b9a2a2f6a9d8a4c9e8b5b7d5f4e" alt="Elegant Stud Earrings">
+              </div>
+              <div class="product-body">
+                <div class="product-title">Elegant Stud Earrings</div>
+                <div class="product-meta">Sterling Silver</div>
+                <div class="price-wrap">
+                  <div class="price-now">₹1,500</div>
+                </div>
+                <div class="mt-3 d-flex justify-content-between align-items-center">
+                  <button class="btn btn-outline-dark btn-sm" onclick="openProduct('ear1')">View</button>
+                  <button class="btn btn-sm btn-primary" onclick="addToCart('ear1', 1500)">Add <i class="bi bi-cart-plus-fill ms-1"></i></button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="col-6 col-md-4 col-lg-3">
+            <article class="product-card h-100" data-category="braclets" data-price="45000" data-color="black" data-style="modern">
+              <div class="product-img">
+                <img src="https://images.unsplash.com/photo-1513708929627-3d8c3d7d4f6a?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=3a7a7d8a1f1e6a3a6b0f0b0c0b8c9a6e" alt="Contemporary Bracelet">
+              </div>
+              <div class="product-body">
+                <div class="product-title">Contemporary Bracelet</div>
+                <div class="product-meta">Mixed Metals</div>
+                <div class="price-wrap">
+                  <div class="price-now">₹45,000</div>
+                </div>
+                <div class="mt-3 d-flex justify-content-between align-items-center">
+                  <button class="btn btn-outline-dark btn-sm" onclick="openProduct('brace1')">View</button>
+                  <button class="btn btn-sm btn-primary" onclick="addToCart('brace1', 45000)">Add <i class="bi bi-cart-plus-fill ms-1"></i></button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Duplicate these sample cards as needed; you can also generate them dynamically from JSON -->
+        </div>
+
+        <!-- bottom pagination + per-page -->
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <div class="muted-small">Showing <span id="visible-count">4</span> of <span id="total-count">24</span> products</div>
+          <nav aria-label="Product pagination">
+            <ul class="pagination mb-0">
+              <li class="page-item disabled"><a class="page-link" href="#">‹</a></li>
+              <li class="page-item active"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">›</a></li>
+            </ul>
+          </nav>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Footer (matching index) -->
+  <footer class="mt-5">
+    <div class="container py-4">
+      <div class="row gy-3">
+        <div class="col-md-4">
+          <img src="assets/images/logo_minalgems.png" alt="logo" style="height:56px;">
+          <p class="mt-2 small muted-small">Jewellery for all occasions. Certified diamonds, premium gold, reliable service.</p>
+        </div>
+        <div class="col-md-4">
+          <h6 class="mb-2">Quick Links</h6>
+          <ul class="list-unstyled small">
+            <li><a href="products.html">Shop</a></li>
+            <li><a href="process.html">Process</a></li>
+            <li><a href="diamonds.html">Diamonds</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h6 class="mb-2">Contact</h6>
+          <p class="small mb-0">33, Sant Tukaram Society-2, Surat</p>
+          <p class="small mb-0">+91 70697 85900</p>
+          <p class="small"><a href="mailto:khatrip.009@gmail.com">khatrip.009@gmail.com</a></p>
+        </div>
+      </div>
+      <hr style="opacity:.06" />
+      <div class="text-center small text-muted">&copy; 2025 Payal & Minal Gems. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    /***********************
+     * Shared navigation + cart helpers
+     ***********************/
+    function goHome(){ window.location.href='index.html'; }
+    function goBack(){
+      if (document.referrer && document.referrer !== window.location.href) { history.back(); return; }
+      if (history.length > 1) { history.back(); return; }
+      window.location.href = 'index.html';
+    }
+
+    const CART_KEY = 'minalgems_cart_v1';
+    function getCart(){ try { return JSON.parse(localStorage.getItem(CART_KEY)) || [] } catch(e){ return [] } }
+    function saveCart(arr){ try { localStorage.setItem(CART_KEY, JSON.stringify(arr)); } catch(e){} }
+    function updateCartCount(){ const el=document.getElementById('cart-count'); if(el) el.innerText = getCart().length; }
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+
+    function addToCart(id, price){
+      const arr = getCart();
+      arr.push({ id, price, addedAt: Date.now() });
+      saveCart(arr);
+      updateCartCount();
+      // lightweight visual feedback
+      const btn = event?.target;
+      if (btn && btn.tagName === 'BUTTON') {
+        const orig = btn.innerHTML;
+        btn.innerHTML = 'Added ✓';
+        setTimeout(()=> btn.innerHTML = orig, 900);
+      }
+    }
+
+    function openProduct(id){
+      // placeholder: go to product detail page
+      window.location.href = 'product-detail.html?id=' + encodeURIComponent(id);
+    }
+
+    /***********************
+     * Filters & UI interactions (vanilla JS)
+     ***********************/
+    const filterToggle = document.getElementById('filter-toggle');
+    const filtersPanel = document.getElementById('filters-panel');
+    const filterText = document.getElementById('filter-text');
+    const productsGrid = document.getElementById('products-grid');
+
+    filterToggle.addEventListener('click', () => {
+      const isHidden = filtersPanel.classList.toggle('d-none');
+      filterText.innerText = isHidden ? 'Show filters' : 'Hide filters';
+      if (window.innerWidth < 992) window.scrollTo({ top: filtersPanel.offsetTop - 20, behavior: 'smooth' });
+    });
+
+    // Price range logic (dual range)
+    const inputLeft = document.getElementById('input-left');
+    const inputRight = document.getElementById('input-right');
+    const amountLeft = document.getElementById('amount-left');
+    const amountRight = document.getElementById('amount-right');
+    const rangeFill = document.getElementById('range-fill');
+
+    function setLeft(){
+      let leftVal = parseInt(inputLeft.value, 10);
+      let rightVal = parseInt(inputRight.value, 10);
+      if (leftVal >= rightVal) leftVal = rightVal - parseInt(inputLeft.step || 1000);
+      inputLeft.value = leftVal;
+      updateRangeUI();
+    }
+    function setRight(){
+      let leftVal = parseInt(inputLeft.value, 10);
+      let rightVal = parseInt(inputRight.value, 10);
+      if (rightVal <= leftVal) rightVal = leftVal + parseInt(inputRight.step || 1000);
+      inputRight.value = rightVal;
+      updateRangeUI();
+    }
+
+    function updateRangeUI(){
+      const min = parseInt(inputLeft.min,10);
+      const max = parseInt(inputLeft.max,10);
+      const left = ((inputLeft.value - min) / (max - min)) * 100;
+      const right = ((inputRight.value - min) / (max - min)) * 100;
+      amountLeft.innerText = formatINR(parseInt(inputLeft.value,10));
+      amountRight.innerText = formatINR(parseInt(inputRight.value,10));
+      rangeFill.style.left = left + '%';
+      rangeFill.style.right = (100 - right) + '%';
+    }
+
+    inputLeft.addEventListener('input', setLeft);
+    inputRight.addEventListener('input', setRight);
+    // init
+    updateRangeUI();
+
+    function formatINR(n){
+      return new Intl.NumberFormat('en-IN', { style:'currency', currency:'INR', maximumFractionDigits:0 }).format(n);
+    }
+
+    // Filter application: basic client-side filter (reads data-* attributes)
+    function applyFilters(){
+      const cats = Array.from(document.querySelectorAll('.cat-chk:checked')).map(el => el.value);
+      const minPrice = parseInt(inputLeft.value,10);
+      const maxPrice = parseInt(inputRight.value,10);
+      const color = document.querySelector('.color-btn.active')?.dataset.color || null;
+      const style = document.querySelector('.style-btn.active')?.dataset.style || null;
+      const sort = document.getElementById('sort').value;
+
+      const cards = Array.from(productsGrid.querySelectorAll('.product-card'));
+      let visibleCount = 0;
+      cards.forEach(card => {
+        const price = parseInt(card.dataset.price || '0',10);
+        const cat = card.dataset.category || '';
+        const col = card.dataset.color || '';
+        const sty = card.dataset.style || '';
+
+        // category filter (if none selected, treat as all)
+        const catMatch = cats.length === 0 ? true : cats.includes(cat);
+        const priceMatch = (price >= minPrice && price <= maxPrice);
+        const colorMatch = color ? (col === color) : true;
+        const styleMatch = style ? (sty === style) : true;
+
+        if (catMatch && priceMatch && colorMatch && styleMatch) {
+          card.parentElement.style.display = ''; // show
+          visibleCount++;
+        } else {
+          card.parentElement.style.display = 'none'; // hide
+        }
+      });
+
+      // Update counts
+      document.getElementById('visible-count').innerText = visibleCount;
+      // Sorting: simple sort by price if requested (reflows DOM)
+      if (sort === 'price-asc' || sort === 'price-desc') {
+        const container = productsGrid;
+        const visibleCards = Array.from(container.querySelectorAll('.col-6, .col-md-4')).filter(el => el.style.display !== 'none');
+        visibleCards.sort((a,b) => {
+          const pa = parseInt(a.querySelector('.product-card').dataset.price || '0',10);
+          const pb = parseInt(b.querySelector('.product-card').dataset.price || '0',10);
+          return sort === 'price-asc' ? pa - pb : pb - pa;
+        });
+        visibleCards.forEach(c => container.appendChild(c));
+      }
+
+      // result count text
+      const total = productsGrid.querySelectorAll('.product-card').length;
+      document.getElementById('results-count').innerText = visibleCount || total;
+    }
+
+    document.getElementById('apply-filters').addEventListener('click', applyFilters);
+    document.getElementById('reset-filters').addEventListener('click', () => {
+      // reset controls
+      document.querySelectorAll('.cat-chk').forEach(c => c.checked = false);
+      inputLeft.value = inputLeft.min;
+      inputRight.value = inputRight.max;
+      document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'));
+      // default visible
+      document.querySelectorAll('#products-grid > *').forEach(col => col.style.display = '');
+      updateRangeUI();
+      document.getElementById('visible-count').innerText = document.querySelectorAll('.product-card').length;
+    });
+
+    // color & style toggles
+    document.querySelectorAll('.color-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+    document.querySelectorAll('.style-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // initial counts
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('visible-count').innerText = document.querySelectorAll('.product-card').length;
+      document.getElementById('total-count').innerText = document.querySelectorAll('.product-card').length;
+      document.getElementById('results-count').innerText = document.querySelectorAll('.product-card').length;
+    });
+
+    /***********************
+     * Accessibility / keyboard helpers (optional)
+     ***********************/
+    // allow filter toggle with Enter/Space
+    filterToggle.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); filterToggle.click(); }
+    });
+
+  </script>
+</body>
+</html>
